@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 local hrp
 
@@ -435,8 +436,8 @@ local bgColor = Color3.fromRGB(40, 15, 30)
 
 local frame = Instance.new("Frame")
 frame.Name = "ControlPanel"
-frame.Size = UDim2.new(0, 200, 0, 180)
-frame.Position = UDim2.new(0.05, 0, 0.3, 0)
+frame.Size = UDim2.new(0, 200, 0, 150)
+frame.Position = UDim2.new(0, 10, 1, -160)
 frame.BackgroundColor3 = bgColor
 frame.BackgroundTransparency = 0.2
 frame.Active = true
@@ -450,8 +451,8 @@ glow.Thickness = 2
 glow.Transparency = 0.3
 
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(0.85, 0, 0, 30)
-title.Position = UDim2.new(0.075, 0, 0, 8)
+title.Size = UDim2.new(1, -16, 0, 30)
+title.Position = UDim2.new(0, 8, 0, 8)
 title.Text = mapConfig.name
 title.Font = Enum.Font.GothamBold
 title.TextSize = 14
@@ -466,35 +467,9 @@ RunService.RenderStepped:Connect(function()
     title.TextColor3 = Color3.fromHSV(hue / 360, 0.7, 1)
 end)
 
-local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(0, 28, 0, 28)
-closeBtn.Position = UDim2.new(0.86, 0, 0, 9)
-closeBtn.Text = "✖"
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 16
-closeBtn.BackgroundColor3 = Color3.fromRGB(180, 40, 80)
-closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 8)
-
-local closeGlow = Instance.new("UIStroke", closeBtn)
-closeGlow.Color = mainColor
-closeGlow.Thickness = 2
-closeGlow.Transparency = 0.5
-
-closeBtn.MouseEnter:Connect(function()
-    tween(closeGlow, {Transparency = 0.1, Thickness = 4}, 0.2)
-end)
-closeBtn.MouseLeave:Connect(function()
-    tween(closeGlow, {Transparency = 0.5, Thickness = 2}, 0.2)
-end)
-closeBtn.MouseButton1Click:Connect(function()
-    stopRoute()
-    screenGui:Destroy()
-end)
-
 toggleBtn = Instance.new("TextButton", frame)
-toggleBtn.Size = UDim2.new(0.85, 0, 0, 45)
-toggleBtn.Position = UDim2.new(0.075, 0, 0, 50)
+toggleBtn.Size = UDim2.new(1, -16, 0, 40)
+toggleBtn.Position = UDim2.new(0, 8, 0, 45)
 toggleBtn.Text = "▶ Start"
 toggleBtn.Font = Enum.Font.GothamBold
 toggleBtn.TextSize = 18
@@ -531,8 +506,8 @@ toggleBtn.MouseButton1Click:Connect(function()
 end)
 
 local speedLabel = Instance.new("TextLabel", frame)
-speedLabel.Size = UDim2.new(0.35, 0, 0, 35)
-speedLabel.Position = UDim2.new(0.325, 0, 0, 110)
+speedLabel.Size = UDim2.new(0.35, 0, 0, 30)
+speedLabel.Position = UDim2.new(0.325, 0, 0, 95)
 speedLabel.BackgroundTransparency = 1
 speedLabel.TextColor3 = lightPink
 speedLabel.Font = Enum.Font.GothamBold
@@ -540,8 +515,8 @@ speedLabel.TextSize = 18
 speedLabel.Text = playbackRate .. "x"
 
 local speedDown = Instance.new("TextButton", frame)
-speedDown.Size = UDim2.new(0.22, 0, 0, 35)
-speedDown.Position = UDim2.new(0.075, 0, 0, 110)
+speedDown.Size = UDim2.new(0.22, 0, 0, 30)
+speedDown.Position = UDim2.new(0.04, 0, 0, 95)
 speedDown.Text = "-"
 speedDown.Font = Enum.Font.GothamBold
 speedDown.TextSize = 20
@@ -557,8 +532,8 @@ speedDown.MouseButton1Click:Connect(function()
 end)
 
 local speedUp = Instance.new("TextButton", frame)
-speedUp.Size = UDim2.new(0.22, 0, 0, 35)
-speedUp.Position = UDim2.new(0.705, 0, 0, 110)
+speedUp.Size = UDim2.new(0.22, 0, 0, 30)
+speedUp.Position = UDim2.new(0.74, 0, 0, 95)
 speedUp.Text = "+"
 speedUp.Font = Enum.Font.GothamBold
 speedUp.TextSize = 20
@@ -574,8 +549,8 @@ speedUp.MouseButton1Click:Connect(function()
 end)
 
 local infoLabel = Instance.new("TextLabel", frame)
-infoLabel.Size = UDim2.new(0.85, 0, 0, 20)
-infoLabel.Position = UDim2.new(0.075, 0, 0, 155)
+infoLabel.Size = UDim2.new(1, -16, 0, 18)
+infoLabel.Position = UDim2.new(0, 8, 0, 130)
 infoLabel.BackgroundTransparency = 1
 infoLabel.TextColor3 = lightPink
 infoLabel.Font = Enum.Font.Gotham
@@ -586,7 +561,7 @@ infoLabel.TextXAlignment = Enum.TextXAlignment.Center
 local loadSuccess = loadAllRoutes()
 
 if loadSuccess then
-    infoLabel.Text = "Routes: " .. #routes .. " | Max: " .. currentMaxSpeed .. "x"
+    infoLabel.Text = "F1: Hide/Show | F2: On/Off | Max: " .. currentMaxSpeed .. "x"
 else
     infoLabel.Text = "❌ Failed to load routes"
     infoLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
@@ -594,5 +569,33 @@ else
     toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 end
 
+local isVisible = true
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.F1 then
+        isVisible = not isVisible
+        if isVisible then
+            tween(frame, {Position = UDim2.new(0, 10, 1, -160)}, 0.3)
+        else
+            tween(frame, {Position = UDim2.new(0, 10, 1, 10)}, 0.3)
+        end
+    elseif input.KeyCode == Enum.KeyCode.F2 then
+        if not isRunning then
+            isRunning = true
+            toggleBtn.Text = "■ Stop"
+            tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(180, 40, 80)}, 0.2)
+            task.spawn(runRoute)
+        else
+            isRunning = false
+            toggleBtn.Text = "▶ Start"
+            tween(toggleBtn, {BackgroundColor3 = mainColor}, 0.2)
+            stopRoute()
+        end
+    end
+end)
+
 _G.KingMorrisSelectedMap = nil
 print("[King Morris] Ready! Map: " .. mapConfig.name)
+print("[King Morris] F1 = Hide/Show UI | F2 = Start/Stop")
