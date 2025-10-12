@@ -363,8 +363,6 @@ task.spawn(function()
     wait(2)
     
     safeLoad("https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/menu.lua", "Menu")
-    wait(1)
-    safeLoad("https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua", "Universal")
     
     print("🎉 All systems loaded!")
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
