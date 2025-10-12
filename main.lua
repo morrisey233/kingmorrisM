@@ -7,60 +7,190 @@ local darkPink = Color3.fromRGB(150, 30, 80)
 local lightPink = Color3.fromRGB(255, 179, 217)
 local bgColor = Color3.fromRGB(40, 15, 30)
 
--- GitHub Configuration
-local GITHUB_RAW_URL = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/whitelist.json"
+-- Whitelist Configuration
+local WHITELIST_URL = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/whitelist.txt"
 
 -- Cache untuk menghindari request berulang
 local whitelistCache = {}
 local cacheExpiry = 0
 
+-- Function untuk HTTP request yang kompatibel dengan executor
+local function httpGet(url)
+    print("🔧 Trying game:HttpGet first...")
+    
+    -- Try game:HttpGet first (most reliable)
+    local success1, result1 = pcall(function()
+        return game:HttpGet(url, true)
+    end)
+    
+    if success1 and result1 and #result1 > 0 then
+        print("✅ game:HttpGet success!")
+        return result1
+    end
+    
+    print("⚠️ game:HttpGet failed, trying request()...")
+    
+    -- Try request()
+    if request then
+        local success2, response = pcall(function()
+            return request({
+                Url = url,
+                Method = "GET"
+            })
+        end)
+        
+        if success2 and response and response.Body then
+            print("✅ request() success!")
+            return response.Body
+        end
+    end
+    
+    -- Try syn.request
+    if syn and syn.request then
+        local success3, response = pcall(function()
+            return syn.request({
+                Url = url,
+                Method = "GET"
+            })
+        end)
+        
+        if success3 and response and response.Body then
+            print("✅ syn.request() success!")
+            return response.Body
+        end
+    end
+    
+    error("All HTTP methods failed")
+end
+
+-- Function untuk parse whitelist format sederhana
+local function parseWhitelist(content)
+    local users = {}
+    
+    print("📄 Parsing content...")
+    print("📏 Content length: " .. #content)
+    
+    -- Format: USERNAME:TIER:EXPIRES (setiap baris)
+    -- Contoh: MORRISRESTO:vip:lifetime
+    for line in content:gmatch("[^\r\n]+") do
+        line = line:match("^%s*(.-)%s*$") -- Trim whitespace
+        
+        print("📝 Processing line: [" .. line .. "]")
+        
+        if line ~= "" and not line:match("^#") and not line:match("^%-%-") then -- Skip empty, comment, dan HTML
+            local parts = {}
+            for part in line:gmatch("[^:]+") do
+                table.insert(parts, part:match("^%s*(.-)%s*$")) -- Trim each part
+            end
+            
+            print("  Parts found: " .. #parts)
+            if #parts > 0 then
+                for i, p in ipairs(parts) do
+                    print("    [" .. i .. "] = " .. p)
+                end
+            end
+            
+            if #parts >= 3 then
+                local username = parts[1]
+                local tier = parts[2]
+                local expires = parts[3]
+                
+                users[username] = {
+                    tier = tier,
+                    expires = expires,
+                    hwid = nil
+                }
+                print("  ✅ Added user: " .. username)
+            else
+                print("  ⚠️ Invalid format (need 3 parts)")
+            end
+        end
+    end
+    
+    return users
+end
+
 local function checkAccessAPI(username)
+    print("🔍 Checking access for: " .. username)
+    
     local currentTime = tick()
     if whitelistCache[username] and currentTime < cacheExpiry then
+        print("📦 Using cached data")
         return whitelistCache[username]
     end
     
+    print("🌐 Fetching whitelist...")
+    
     local success, result = pcall(function()
-        pcall(function()
-            if not HttpService.HttpEnabled then
-                HttpService.HttpEnabled = true
-            end
-        end)
-        
-        local response = HttpService:GetAsync(GITHUB_RAW_URL, true)
-        return HttpService:JSONDecode(response)
+        local response = httpGet(WHITELIST_URL)
+        print("📥 Response length: " .. #response .. " chars")
+        print("📝 First 100 chars: " .. string.sub(response, 1, 100))
+        return parseWhitelist(response)
     end)
     
-    if success and result and result.users then
-        local userData = result.users[username]
+    if not success then
+        warn("❌ Failed to fetch/parse whitelist: " .. tostring(result))
+        whitelistCache[username] = {allowed = false}
+        cacheExpiry = currentTime + 60
+        return whitelistCache[username]
+    end
+    
+    if not result then
+        warn("❌ Invalid whitelist format")
+        whitelistCache[username] = {allowed = false}
+        cacheExpiry = currentTime + 60
+        return whitelistCache[username]
+    end
+    
+    -- Count users
+    local userCount = 0
+    for _ in pairs(result) do
+        userCount = userCount + 1
+    end
+    print("📊 Total users in whitelist: " .. userCount)
+    
+    -- Debug: Print all usernames
+    print("👥 Users in whitelist:")
+    for uname, _ in pairs(result) do
+        print("  - " .. uname)
+    end
+    
+    local userData = result[username]
+    
+    if userData then
+        print("✅ User found in whitelist!")
+        print("  - Tier: " .. tostring(userData.tier))
+        print("  - Expires: " .. tostring(userData.expires))
         
-        if userData then
-            local isValid = true
-            if userData.expires ~= "lifetime" then
-                local expireDate = userData.expires
-                local today = os.date("%Y-%m-%d")
-                isValid = expireDate >= today
-            end
-            
-            if isValid then
-                whitelistCache[username] = {
-                    allowed = true,
-                    tier = userData.tier,
-                    expires = userData.expires
-                }
-                cacheExpiry = currentTime + 300
-                return whitelistCache[username]
-            else
-                whitelistCache[username] = {allowed = false}
-                cacheExpiry = currentTime + 60
-                return whitelistCache[username]
-            end
+        local isValid = true
+        if userData.expires ~= "lifetime" then
+            local expireDate = userData.expires
+            local today = os.date("%Y-%m-%d")
+            print("  - Today: " .. today)
+            print("  - Expire Date: " .. expireDate)
+            isValid = expireDate >= today
+            print("  - Valid: " .. tostring(isValid))
         else
+            print("  - Lifetime access!")
+        end
+        
+        if isValid then
+            whitelistCache[username] = {
+                allowed = true,
+                tier = userData.tier,
+                expires = userData.expires
+            }
+            cacheExpiry = currentTime + 300
+            print("✅ Access GRANTED")
+            return whitelistCache[username]
+        else
+            print("❌ Subscription expired")
             whitelistCache[username] = {allowed = false}
             cacheExpiry = currentTime + 60
             return whitelistCache[username]
         end
     else
+        print("❌ User NOT found in whitelist")
         whitelistCache[username] = {allowed = false}
         cacheExpiry = currentTime + 60
         return whitelistCache[username]
@@ -376,7 +506,7 @@ end
 
 local function safeLoad(url, name)
     local success = pcall(function()
-        local script = game:HttpGet(url)
+        local script = httpGet(url)
         local func = loadstring(script)
         if func then func() end
     end)
@@ -397,13 +527,22 @@ task.spawn(function()
     
     local accessData = checkAccessAPI(player.Name)
     
+    print("\n📊 Final Result:")
+    print("  - Allowed: " .. tostring(accessData.allowed))
+    if accessData.tier then
+        print("  - Tier: " .. accessData.tier)
+    end
+    if accessData.expires then
+        print("  - Expires: " .. accessData.expires)
+    end
+    
     if not accessData.allowed then
-        print("❌ Access Denied")
+        print("\n❌ Access Denied - Showing GUI")
         createGUI()
         return
     end
     
-    print("✅ Access Granted")
+    print("\n✅ Access Granted")
     print("🎖️ Tier: " .. (accessData.tier or "standard"):upper())
     print("⏰ Expires: " .. (accessData.expires or "unknown"))
     
