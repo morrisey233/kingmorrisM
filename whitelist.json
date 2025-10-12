@@ -1,12 +1,5 @@
 {
     "version": "1.0",
-    "last_updated": "2025-10-12 10:57:00",
-    "users": {
-        "MORRISRESTO": {
-            "tier": "premium",
-            "expires": "lifetime",
-            "hwid": null,
-            "added_date": "2025-10-12"
-        }
-    }
+    "last_updated": "2025-10-12 11:06:00",
+    "users": {}
 }
