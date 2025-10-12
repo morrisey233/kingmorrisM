@@ -1,5 +1,5 @@
 -- WataX Universal Route Script with Menu Integration
--- UI disesuaikan dengan tema menu utama
+-- UI dengan styling bervariasi sesuai menu utama
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -7,7 +7,7 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local hrp
 
--- 🗺️ MAP CONFIGURATION DATABASE
+-- MAP CONFIGURATION DATABASE
 local MAP_DATABASE = {
     m1 = {name = "Mount Atin", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m1.lua", maxSpeed = 6, frameTime = 1/30},
     m2 = {name = "Mount Yahayuk", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m2.lua", maxSpeed = 3, frameTime = 1/30},
@@ -40,7 +40,6 @@ local MAP_DATABASE = {
     m29 = {name = "Mount Lirae", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m29.lua", maxSpeed = 3, frameTime = 1/32},
 }
 
--- PARAMETER DARI MENU
 local selectedMapKey = _G.WataXSelectedMap or "m1"
 local mapConfig = MAP_DATABASE[selectedMapKey]
 
@@ -52,7 +51,6 @@ end
 
 print("[WataX] Loading map: " .. mapConfig.name)
 
--- Variables
 local routes = {}
 local animConn
 local isMoving = false
@@ -61,17 +59,15 @@ local playbackRate = 1
 local isReplayRunning = false
 local currentMaxSpeed = mapConfig.maxSpeed
 
--- Color Theme (Match menu utama)
+-- Color Theme
 local mainColor = Color3.fromRGB(255, 105, 180)
 local hoverBright = Color3.fromRGB(255, 182, 193)
 local bgTrans = 0.15
 
--- Tween helper
 local function tween(obj, props, dur)
     TweenService:Create(obj, TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
 end
 
--- Function untuk load route dari URL
 local function loadRoute(url)
     local ok, data = pcall(function()
         return loadstring(game:HttpGet(url))()
@@ -82,7 +78,6 @@ local function loadRoute(url)
     return nil
 end
 
--- Load route map yang dipilih
 local function loadCurrentMap()
     routes = {}
     local mapData = loadRoute(mapConfig.url)
@@ -124,7 +119,7 @@ local function setupMovement(char)
             isRunning = false
             if toggleBtn and toggleBtn.Parent then
                 toggleBtn.Text = "▶ Start"
-                tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(152, 251, 152), BackgroundTransparency = 0.2}, 0.2)
+                tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(144, 238, 144), BackgroundTransparency = 0.1}, 0.2)
             end
         end)
 
@@ -268,7 +263,7 @@ local function stopRoute()
     stopMovement()
 end
 
--- 🎨 UI Creation (Match Menu Theme)
+-- UI CREATION
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "WataXReplayUI"
 screenGui.IgnoreGuiInset = true
@@ -299,87 +294,95 @@ title.Size = UDim2.new(1, -20, 0, 35)
 title.Position = UDim2.new(0, 10, 0, 8)
 title.BackgroundTransparency = 1
 title.Font = Enum.Font.GothamBold
-title.TextSize = 14
+title.TextSize = 13
 title.TextColor3 = Color3.fromRGB(219, 39, 119)
 title.Text = mapConfig.name
 title.TextXAlignment = Enum.TextXAlignment.Center
 title.TextWrapped = true
 
--- Start/Stop Button
+-- Start Button
 local toggleBtn = Instance.new("TextButton", frame)
-toggleBtn.Size = UDim2.new(1, -20, 0, 45)
+toggleBtn.Size = UDim2.new(1, -20, 0, 42)
 toggleBtn.Position = UDim2.new(0, 10, 0, 50)
-toggleBtn.BackgroundColor3 = Color3.fromRGB(152, 251, 152)
-toggleBtn.BackgroundTransparency = 0.2
+toggleBtn.BackgroundColor3 = Color3.fromRGB(144, 238, 144)
+toggleBtn.BackgroundTransparency = 0.1
 toggleBtn.BorderSizePixel = 0
 toggleBtn.Font = Enum.Font.GothamBold
-toggleBtn.TextSize = 16
+toggleBtn.TextSize = 15
 toggleBtn.TextColor3 = Color3.fromRGB(0, 128, 0)
 toggleBtn.Text = "▶ Start"
 toggleBtn.AutoButtonColor = false
-Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 15)
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 12)
 
 local toggleStroke = Instance.new("UIStroke", toggleBtn)
 toggleStroke.Color = Color3.fromRGB(0, 128, 0)
 toggleStroke.Thickness = 2
-toggleStroke.Transparency = 0.4
+toggleStroke.Transparency = 0.5
+toggleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 
 toggleBtn.MouseEnter:Connect(function()
     tween(toggleStroke, {Transparency = 0}, 0.15)
     tween(toggleBtn, {BackgroundTransparency = 0}, 0.2)
 end)
 toggleBtn.MouseLeave:Connect(function()
-    tween(toggleStroke, {Transparency = 0.4}, 0.2)
-    tween(toggleBtn, {BackgroundTransparency = 0.2}, 0.25)
+    tween(toggleStroke, {Transparency = 0.5}, 0.2)
+    tween(toggleBtn, {BackgroundTransparency = 0.1}, 0.25)
 end)
 
 isRunning = false
 toggleBtn.MouseButton1Click:Connect(function()
     if not isRunning then
         isRunning = true
-        toggleBtn.Text = "■ Stop"
+        toggleBtn.Text = "⏸ Stop"
         tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(255, 99, 71), BackgroundTransparency = 0}, 0.2)
-        tween(toggleStroke, {Color = Color3.fromRGB(255, 99, 71)}, 0.2)
+        tween(toggleStroke, {Color = Color3.fromRGB(220, 20, 60)}, 0.2)
         task.spawn(runRoute)
     else
         isRunning = false
         toggleBtn.Text = "▶ Start"
-        tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(152, 251, 152), BackgroundTransparency = 0.2}, 0.2)
+        tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(144, 238, 144), BackgroundTransparency = 0.1}, 0.2)
         tween(toggleStroke, {Color = Color3.fromRGB(0, 128, 0)}, 0.2)
         stopRoute()
     end
 end)
 
--- Speed Label
+-- Speed Display
 local speedLabel = Instance.new("TextLabel", frame)
-speedLabel.Size = UDim2.new(1, -20, 0, 25)
-speedLabel.Position = UDim2.new(0, 10, 0, 105)
+speedLabel.Size = UDim2.new(1, -20, 0, 20)
+speedLabel.Position = UDim2.new(0, 10, 0, 102)
 speedLabel.BackgroundTransparency = 1
 speedLabel.Font = Enum.Font.GothamBold
-speedLabel.TextSize = 13
+speedLabel.TextSize = 12
 speedLabel.TextColor3 = Color3.fromRGB(219, 39, 119)
 speedLabel.Text = "Speed: " .. playbackRate .. "x"
 speedLabel.TextXAlignment = Enum.TextXAlignment.Center
 
--- Speed Controls
+-- Speed Decrease
 local speedDown = Instance.new("TextButton", frame)
-speedDown.Size = UDim2.new(0.4, -8, 0, 35)
-speedDown.Position = UDim2.new(0, 10, 0, 135)
-speedDown.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-speedDown.BackgroundTransparency = 0.2
+speedDown.Size = UDim2.new(0.35, -6, 0, 38)
+speedDown.Position = UDim2.new(0, 10, 0, 130)
+speedDown.BackgroundColor3 = Color3.fromRGB(173, 216, 230)
+speedDown.BackgroundTransparency = 0.15
 speedDown.BorderSizePixel = 0
 speedDown.Font = Enum.Font.GothamBold
-speedDown.TextSize = 18
-speedDown.TextColor3 = Color3.fromRGB(60, 60, 60)
+speedDown.TextSize = 20
+speedDown.TextColor3 = Color3.fromRGB(30, 144, 255)
 speedDown.Text = "−"
 speedDown.AutoButtonColor = false
 Instance.new("UICorner", speedDown).CornerRadius = UDim.new(0, 10)
 
+local downStroke = Instance.new("UIStroke", speedDown)
+downStroke.Color = Color3.fromRGB(30, 144, 255)
+downStroke.Thickness = 1.5
+downStroke.Transparency = 0.5
+
 speedDown.MouseEnter:Connect(function()
     tween(speedDown, {BackgroundTransparency = 0}, 0.15)
+    tween(downStroke, {Thickness = 2, Transparency = 0}, 0.15)
 end)
 speedDown.MouseLeave:Connect(function()
-    tween(speedDown, {BackgroundTransparency = 0.2}, 0.15)
+    tween(speedDown, {BackgroundTransparency = 0.15}, 0.15)
+    tween(downStroke, {Thickness = 1.5, Transparency = 0.5}, 0.15)
 end)
 
 speedDown.MouseButton1Click:Connect(function()
@@ -387,55 +390,106 @@ speedDown.MouseButton1Click:Connect(function()
     speedLabel.Text = "Speed: " .. playbackRate .. "x"
 end)
 
+-- Speed Display Center
+local speedText = Instance.new("TextLabel", frame)
+speedText.Size = UDim2.new(0.3, 0, 0, 38)
+speedText.Position = UDim2.new(0.35, 0, 0, 130)
+speedText.BackgroundTransparency = 1
+speedText.Font = Enum.Font.GothamBold
+speedText.TextSize = 18
+speedText.TextColor3 = mainColor
+speedText.Text = playbackRate .. "x"
+speedText.TextXAlignment = Enum.TextXAlignment.Center
+
+-- Speed Increase
 local speedUp = Instance.new("TextButton", frame)
-speedUp.Size = UDim2.new(0.4, -8, 0, 35)
-speedUp.Position = UDim2.new(0.5, 8, 0, 135)
+speedUp.Size = UDim2.new(0.35, -6, 0, 38)
+speedUp.Position = UDim2.new(0.65, 6, 0, 130)
 speedUp.BackgroundColor3 = mainColor
-speedUp.BackgroundTransparency = 0.2
+speedUp.BackgroundTransparency = 0.15
 speedUp.BorderSizePixel = 0
 speedUp.Font = Enum.Font.GothamBold
-speedUp.TextSize = 18
+speedUp.TextSize = 20
 speedUp.TextColor3 = Color3.fromRGB(219, 39, 119)
 speedUp.Text = "+"
 speedUp.AutoButtonColor = false
 Instance.new("UICorner", speedUp).CornerRadius = UDim.new(0, 10)
 
+local upStroke = Instance.new("UIStroke", speedUp)
+upStroke.Color = Color3.fromRGB(219, 39, 119)
+upStroke.Thickness = 1.5
+upStroke.Transparency = 0.5
+
 speedUp.MouseEnter:Connect(function()
     tween(speedUp, {BackgroundTransparency = 0}, 0.15)
+    tween(upStroke, {Thickness = 2, Transparency = 0}, 0.15)
 end)
 speedUp.MouseLeave:Connect(function()
-    tween(speedUp, {BackgroundTransparency = 0.2}, 0.15)
+    tween(speedUp, {BackgroundTransparency = 0.15}, 0.15)
+    tween(upStroke, {Thickness = 1.5, Transparency = 0.5}, 0.15)
 end)
 
 speedUp.MouseButton1Click:Connect(function()
     playbackRate = math.min(currentMaxSpeed, playbackRate + 0.25)
     speedLabel.Text = "Speed: " .. playbackRate .. "x"
+    speedText.Text = playbackRate .. "x"
 end)
+
+speedDown.MouseButton1Click:Connect(function()
+    playbackRate = math.max(0.25, playbackRate - 0.25)
+    speedLabel.Text = "Speed: " .. playbackRate .. "x"
+    speedText.Text = playbackRate .. "x"
+end)
+
+-- Info Section
+local infoLabel = Instance.new("TextLabel", frame)
+infoLabel.Size = UDim2.new(1, -20, 0, 18)
+infoLabel.Position = UDim2.new(0, 10, 0, 180)
+infoLabel.BackgroundTransparency = 1
+infoLabel.Font = Enum.Font.Gotham
+infoLabel.TextSize = 10
+infoLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+infoLabel.Text = "Frame: " .. frameTime
+infoLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+-- Status Indicator
+local statusIndicator = Instance.new("Frame", frame)
+statusIndicator.Size = UDim2.new(1, -20, 0, 5)
+statusIndicator.Position = UDim2.new(0, 10, 0, 205)
+statusIndicator.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+statusIndicator.BorderSizePixel = 0
+Instance.new("UICorner", statusIndicator).CornerRadius = UDim.new(0, 3)
 
 -- Close Button
 local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(1, -20, 0, 35)
-closeBtn.Position = UDim2.new(0, 10, 0, 180)
-closeBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+closeBtn.Size = UDim2.new(1, -20, 0, 38)
+closeBtn.Position = UDim2.new(0, 10, 0, 220)
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 192, 203)
 closeBtn.BackgroundTransparency = 0.2
 closeBtn.BorderSizePixel = 0
 closeBtn.Font = Enum.Font.GothamBold
 closeBtn.TextSize = 14
-closeBtn.TextColor3 = Color3.fromRGB(100, 100, 100)
+closeBtn.TextColor3 = Color3.fromRGB(219, 39, 119)
 closeBtn.Text = "✖ Close"
 closeBtn.AutoButtonColor = false
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 15)
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 12)
+
+local closeStroke = Instance.new("UIStroke", closeBtn)
+closeStroke.Color = mainColor
+closeStroke.Thickness = 1.5
+closeStroke.Transparency = 0.6
 
 closeBtn.MouseEnter:Connect(function()
     tween(closeBtn, {BackgroundTransparency = 0}, 0.15)
+    tween(closeStroke, {Transparency = 0}, 0.15)
 end)
 closeBtn.MouseLeave:Connect(function()
     tween(closeBtn, {BackgroundTransparency = 0.2}, 0.15)
+    tween(closeStroke, {Transparency = 0.6}, 0.15)
 end)
 
 closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
--- Clear parameter setelah digunakan
 _G.WataXSelectedMap = nil
