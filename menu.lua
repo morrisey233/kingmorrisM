@@ -3,53 +3,30 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local gui = player:WaitForChild("PlayerGui")
 
-if gui:FindFirstChild("WataXMenuUI") then gui.WataXMenuUI:Destroy() end
+if gui:FindFirstChild("MorrisMenuUI") then gui.MorrisMenuUI:Destroy() end
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "WataXMenuUI"
+ScreenGui.Name = "MorrisMenuUI"
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = gui
 
-local mainColor = Color3.fromRGB(255, 105, 180)
-local hoverBright = Color3.fromRGB(255, 182, 193)
-local bgTrans = 0.15
+-- Modern Pink Color Palette
+local pink = Color3.fromRGB(255, 105, 180)
+local lightPink = Color3.fromRGB(255, 182, 193)
+local darkPink = Color3.fromRGB(219, 39, 119)
+local white = Color3.fromRGB(255, 255, 255)
+local bgDark = Color3.fromRGB(30, 30, 40)
+local bgCard = Color3.fromRGB(40, 40, 52)
 
 local function tween(obj, props, dur)
-    TweenService:Create(obj, TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+    TweenService:Create(obj, TweenInfo.new(dur or 0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), props):Play()
 end
-
-local Phone = Instance.new("Frame")
-Phone.Name = "Phone"
-Phone.Parent = ScreenGui
-Phone.Size = UDim2.new(0, 200, 0, 400)
-Phone.Position = UDim2.new(0.05, 0, 0.2, 0)
-Phone.BackgroundColor3 = Color3.fromRGB(50, 30, 70)
-Phone.BackgroundTransparency = 0.3
-Phone.Active = true
-Phone.Draggable = true
-Instance.new("UICorner", Phone).CornerRadius = UDim.new(0, 20)
-
-local stroke = Instance.new("UIStroke", Phone)
-stroke.Thickness = 3
-stroke.Color = Color3.fromRGB(180, 120, 255)
-stroke.Transparency = 0.4
-
-local Title = Instance.new("TextLabel")
-Title.Parent = Phone
-Title.Size = UDim2.new(1, -20, 0, 35)
-Title.Position = UDim2.new(0, 10, 0, 10)
-Title.BackgroundTransparency = 1
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 18
-Title.TextColor3 = Color3.fromRGB(255, 105, 180)
-Title.Text = "💫 WATAX MENU"
-Title.TextXAlignment = Enum.TextXAlignment.Center
 
 -- URL Universal Script
 local UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua"
 
--- Map List dengan mapKey yang sesuai
+-- Map List
 local mapList = {
     {text="Mount Atin", mapKey="m1"},
     {text="Mount Yahayuk", mapKey="m2"},
@@ -82,59 +59,172 @@ local mapList = {
     {text="Mount Lirae", mapKey="m29"},
 }
 
+-- Main Container
+local Main = Instance.new("Frame")
+Main.Name = "MainContainer"
+Main.Parent = ScreenGui
+Main.Size = UDim2.new(0, 280, 0, 450)
+Main.Position = UDim2.new(0.5, -140, 0.5, -225)
+Main.BackgroundColor3 = bgDark
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 16)
+
+-- Shadow Effect
+local Shadow = Instance.new("ImageLabel")
+Shadow.Name = "Shadow"
+Shadow.Parent = Main
+Shadow.BackgroundTransparency = 1
+Shadow.Position = UDim2.new(0, -15, 0, -15)
+Shadow.Size = UDim2.new(1, 30, 1, 30)
+Shadow.ZIndex = 0
+Shadow.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Shadow.ImageTransparency = 0.7
+
+-- Header
+local Header = Instance.new("Frame")
+Header.Name = "Header"
+Header.Parent = Main
+Header.Size = UDim2.new(1, 0, 0, 70)
+Header.BackgroundColor3 = darkPink
+Header.BorderSizePixel = 0
+Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 16)
+
+local HeaderBottom = Instance.new("Frame")
+HeaderBottom.Parent = Header
+HeaderBottom.Size = UDim2.new(1, 0, 0, 16)
+HeaderBottom.Position = UDim2.new(0, 0, 1, -16)
+HeaderBottom.BackgroundColor3 = darkPink
+HeaderBottom.BorderSizePixel = 0
+
+-- Logo/Icon
+local Icon = Instance.new("TextLabel")
+Icon.Parent = Header
+Icon.Size = UDim2.new(0, 40, 0, 40)
+Icon.Position = UDim2.new(0, 15, 0, 15)
+Icon.BackgroundColor3 = white
+Icon.Text = "M"
+Icon.Font = Enum.Font.GothamBold
+Icon.TextSize = 24
+Icon.TextColor3 = darkPink
+Icon.BorderSizePixel = 0
+local IconCorner = Instance.new("UICorner", Icon)
+IconCorner.CornerRadius = UDim.new(1, 0)
+
+-- Title
+local Title = Instance.new("TextLabel")
+Title.Parent = Header
+Title.Size = UDim2.new(1, -120, 0, 40)
+Title.Position = UDim2.new(0, 65, 0, 15)
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 20
+Title.TextColor3 = white
+Title.Text = "MORRIS SCRIPT"
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Close Button
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Parent = Header
+CloseBtn.Size = UDim2.new(0, 40, 0, 40)
+CloseBtn.Position = UDim2.new(1, -55, 0, 15)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.BackgroundTransparency = 0.9
+CloseBtn.Text = "×"
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 28
+CloseBtn.TextColor3 = white
+CloseBtn.AutoButtonColor = false
+CloseBtn.BorderSizePixel = 0
+local CloseBtnCorner = Instance.new("UICorner", CloseBtn)
+CloseBtnCorner.CornerRadius = UDim.new(1, 0)
+
+CloseBtn.MouseEnter:Connect(function()
+    tween(CloseBtn, {BackgroundTransparency = 0.7})
+end)
+CloseBtn.MouseLeave:Connect(function()
+    tween(CloseBtn, {BackgroundTransparency = 0.9})
+end)
+CloseBtn.MouseButton1Click:Connect(function()
+    tween(Main, {Size = UDim2.new(0, 0, 0, 0)}, 0.3)
+    task.wait(0.3)
+    ScreenGui:Destroy()
+end)
+
+-- Search Bar
+local SearchBar = Instance.new("TextBox")
+SearchBar.Parent = Main
+SearchBar.Size = UDim2.new(1, -30, 0, 40)
+SearchBar.Position = UDim2.new(0, 15, 0, 85)
+SearchBar.BackgroundColor3 = bgCard
+SearchBar.BorderSizePixel = 0
+SearchBar.Font = Enum.Font.Gotham
+SearchBar.TextSize = 14
+SearchBar.TextColor3 = white
+SearchBar.PlaceholderText = "🔍 Search maps..."
+SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 160)
+SearchBar.Text = ""
+SearchBar.ClearTextOnFocus = false
+Instance.new("UICorner", SearchBar).CornerRadius = UDim.new(0, 10)
+Instance.new("UIPadding", SearchBar).PaddingLeft = UDim.new(0, 12)
+
+-- Scroll Frame
 local Scroll = Instance.new("ScrollingFrame")
-Scroll.Parent = Phone
-Scroll.Size = UDim2.new(1, -20, 1, -60)
-Scroll.Position = UDim2.new(0, 10, 0, 50)
-Scroll.BackgroundColor3 = Color3.fromRGB(40, 25, 60)
-Scroll.BackgroundTransparency = 0.5
+Scroll.Parent = Main
+Scroll.Size = UDim2.new(1, -30, 1, -145)
+Scroll.Position = UDim2.new(0, 15, 0, 135)
+Scroll.BackgroundTransparency = 1
 Scroll.BorderSizePixel = 0
-Scroll.ScrollBarThickness = 6
-Scroll.ScrollBarImageColor3 = mainColor
+Scroll.ScrollBarThickness = 4
+Scroll.ScrollBarImageColor3 = pink
 Scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-Instance.new("UICorner", Scroll).CornerRadius = UDim.new(0, 12)
 
 local Layout = Instance.new("UIListLayout", Scroll)
-Layout.Padding = UDim.new(0, 5)
+Layout.Padding = UDim.new(0, 8)
 Layout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- Buat tombol untuk setiap Mount
+-- Create Map Buttons
 for i, info in ipairs(mapList) do
-    local b = Instance.new("TextButton")
-    b.Name = "Btn" .. i
-    b.Parent = Scroll
-    b.Size = UDim2.new(1, -12, 0, 35)
-    b.BackgroundColor3 = Color3.fromRGB(60, 40, 100)
-    b.BackgroundTransparency = 0.3
-    b.BorderSizePixel = 0
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 13
-    b.TextColor3 = Color3.fromRGB(200, 200, 255)
-    b.Text = info.text
-    b.AutoButtonColor = false
+    local Btn = Instance.new("TextButton")
+    Btn.Name = "MapBtn" .. i
+    Btn.Parent = Scroll
+    Btn.Size = UDim2.new(1, -8, 0, 45)
+    Btn.BackgroundColor3 = bgCard
+    Btn.BorderSizePixel = 0
+    Btn.Font = Enum.Font.GothamSemibold
+    Btn.TextSize = 14
+    Btn.TextColor3 = white
+    Btn.Text = info.text
+    Btn.AutoButtonColor = false
+    Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 10)
     
-    local corner = Instance.new("UICorner", b)
-    corner.CornerRadius = UDim.new(0, 10)
-    
-    local s = Instance.new("UIStroke", b)
-    s.Color = Color3.fromRGB(150, 100, 200)
-    s.Thickness = 2
-    s.Transparency = 0.5
+    local Accent = Instance.new("Frame")
+    Accent.Name = "Accent"
+    Accent.Parent = Btn
+    Accent.Size = UDim2.new(0, 4, 1, 0)
+    Accent.Position = UDim2.new(0, 0, 0, 0)
+    Accent.BackgroundColor3 = pink
+    Accent.BorderSizePixel = 0
+    local AccentCorner = Instance.new("UICorner", Accent)
+    AccentCorner.CornerRadius = UDim.new(0, 10)
 
-    b.MouseEnter:Connect(function() 
-        tween(s, {Transparency = 0.1, Thickness = 3}, 0.15)
-        tween(b, {BackgroundColor3 = Color3.fromRGB(150, 100, 200), BackgroundTransparency = 0.1}, 0.2)
-    end)
-    b.MouseLeave:Connect(function() 
-        tween(s, {Transparency = 0.5, Thickness = 2}, 0.2)
-        tween(b, {BackgroundColor3 = Color3.fromRGB(60, 40, 100), BackgroundTransparency = 0.3}, 0.25)
+    Btn.MouseEnter:Connect(function()
+        tween(Btn, {BackgroundColor3 = Color3.fromRGB(50, 50, 62)})
+        tween(Accent, {Size = UDim2.new(0, 6, 1, 0)})
     end)
     
-    b.MouseButton1Click:Connect(function()
-        local originalText = b.Text
-        b.Text = "⏳ Loading..."
+    Btn.MouseLeave:Connect(function()
+        tween(Btn, {BackgroundColor3 = bgCard})
+        tween(Accent, {Size = UDim2.new(0, 4, 1, 0)})
+    end)
+    
+    Btn.MouseButton1Click:Connect(function()
+        local originalText = Btn.Text
+        Btn.Text = "⏳ Loading..."
+        tween(Btn, {BackgroundColor3 = darkPink})
         
-        -- Set parameter map sebelum load universal script
         _G.WataXSelectedMap = info.mapKey
         
         local ok, err = pcall(function()
@@ -143,21 +233,43 @@ for i, info in ipairs(mapList) do
         end)
         
         if ok then
-            print("[WataX Menu] Successfully loaded: " .. info.text)
-            -- Hapus menu setelah berhasil load
+            print("[Morris Script] Successfully loaded: " .. info.text)
             task.wait(0.5)
             ScreenGui:Destroy()
         else 
-            b.Text = "❌ Error"
-            warn("[WataX Menu] Error loading:", err)
+            Btn.Text = "❌ Error"
+            tween(Btn, {BackgroundColor3 = Color3.fromRGB(220, 50, 50)})
+            warn("[Morris Script] Error loading:", err)
             _G.WataXSelectedMap = nil
             task.wait(2)
-            b.Text = originalText
+            Btn.Text = originalText
+            tween(Btn, {BackgroundColor3 = bgCard})
         end
     end)
 end
 
--- Update canvas size
+-- Search Functionality
+SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
+    local searchText = SearchBar.Text:lower()
+    for _, btn in pairs(Scroll:GetChildren()) do
+        if btn:IsA("TextButton") then
+            if searchText == "" or btn.Text:lower():find(searchText) then
+                btn.Visible = true
+            else
+                btn.Visible = false
+            end
+        end
+    end
+end)
+
+-- Update Canvas Size
 task.wait(0.1)
 Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
+Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
+end)
 
+-- Entry Animation
+Main.Size = UDim2.new(0, 0, 0, 0)
+Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+tween(Main, {Size = UDim2.new(0, 280, 0, 450), Position = UDim2.new(0.5, -140, 0.5, -225)}, 0.5)
