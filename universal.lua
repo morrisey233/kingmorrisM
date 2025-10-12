@@ -1,5 +1,5 @@
 -- WataX Universal Route Script with Menu Integration
--- Bisa menerima parameter dari menu utama
+-- UI disesuaikan dengan tema menu utama
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -7,7 +7,7 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local hrp
 
--- 🗺️ MAP CONFIGURATION DATABASE (Updated with speeds dari menu)
+-- 🗺️ MAP CONFIGURATION DATABASE
 local MAP_DATABASE = {
     m1 = {name = "Mount Atin", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m1.lua", maxSpeed = 6, frameTime = 1/30},
     m2 = {name = "Mount Yahayuk", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m2.lua", maxSpeed = 3, frameTime = 1/30},
@@ -40,8 +40,8 @@ local MAP_DATABASE = {
     m29 = {name = "Mount Lirae", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m29.lua", maxSpeed = 3, frameTime = 1/32},
 }
 
--- 📥 TERIMA PARAMETER DARI MENU (jika ada)
-local selectedMapKey = _G.WataXSelectedMap or "m1" -- Default: Mount Atin
+-- PARAMETER DARI MENU
+local selectedMapKey = _G.WataXSelectedMap or "m1"
 local mapConfig = MAP_DATABASE[selectedMapKey]
 
 if not mapConfig then
@@ -56,10 +56,20 @@ print("[WataX] Loading map: " .. mapConfig.name)
 local routes = {}
 local animConn
 local isMoving = false
-local frameTime = 1/30
+local frameTime = mapConfig.frameTime
 local playbackRate = 1
 local isReplayRunning = false
 local currentMaxSpeed = mapConfig.maxSpeed
+
+-- Color Theme (Match menu utama)
+local mainColor = Color3.fromRGB(255, 105, 180)
+local hoverBright = Color3.fromRGB(255, 182, 193)
+local bgTrans = 0.15
+
+-- Tween helper
+local function tween(obj, props, dur)
+    TweenService:Create(obj, TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
+end
 
 -- Function untuk load route dari URL
 local function loadRoute(url)
@@ -114,7 +124,7 @@ local function setupMovement(char)
             isRunning = false
             if toggleBtn and toggleBtn.Parent then
                 toggleBtn.Text = "▶ Start"
-                toggleBtn.BackgroundColor3 = Color3.fromRGB(70,200,120)
+                tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(152, 251, 152), BackgroundTransparency = 0.2}, 0.2)
             end
         end)
 
@@ -189,7 +199,6 @@ local function adjustRoute(frames)
     return adjusted
 end
 
--- Adjust routes saat load
 if #routes > 0 then
     for i, data in ipairs(routes) do
         data[2] = adjustRoute(data[2])
@@ -259,93 +268,69 @@ local function stopRoute()
     stopMovement()
 end
 
--- 🎨 UI Creation
+-- 🎨 UI Creation (Match Menu Theme)
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name="WataXReplayUI"
-screenGui.Parent=game.CoreGui
+screenGui.Name = "WataXReplayUI"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game.CoreGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 220, 0, 130)
-frame.Position = UDim2.new(0.05,0,0.75,0)
-frame.BackgroundColor3 = Color3.fromRGB(50,30,70)
-frame.BackgroundTransparency = 0.3
+frame.Name = "Phone"
+frame.Size = UDim2.new(0, 180, 0, 360)
+frame.Position = UDim2.new(0, 10, 1, -370)
+frame.AnchorPoint = Vector2.new(0, 0)
+frame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+frame.BackgroundTransparency = bgTrans
 frame.Active = true
 frame.Draggable = true
 frame.Parent = screenGui
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0,16)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 30)
 
-local glow = Instance.new("UIStroke")
-glow.Parent = frame
-glow.Color = Color3.fromRGB(180,120,255)
-glow.Thickness = 2
-glow.Transparency = 0.4
+local stroke = Instance.new("UIStroke", frame)
+stroke.Thickness = 3
+stroke.Color = mainColor
+stroke.Transparency = 0.3
 
 -- Title
-local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(0.75,0,0,28)
-title.Position = UDim2.new(0.05,0,0,4)
-title.Text = mapConfig.name -- Menampilkan nama map yang dipilih
+local title = Instance.new("TextLabel")
+title.Parent = frame
+title.Size = UDim2.new(1, -20, 0, 35)
+title.Position = UDim2.new(0, 10, 0, 8)
+title.BackgroundTransparency = 1
 title.Font = Enum.Font.GothamBold
-title.TextScaled = true
-title.BackgroundTransparency = 0.3
-title.BackgroundColor3 = Color3.fromRGB(70,40,120)
-Instance.new("UICorner", title).CornerRadius = UDim.new(0,12)
+title.TextSize = 14
+title.TextColor3 = Color3.fromRGB(219, 39, 119)
+title.Text = mapConfig.name
+title.TextXAlignment = Enum.TextXAlignment.Center
+title.TextWrapped = true
 
-local hue = 0
-RunService.RenderStepped:Connect(function()
-    hue = (hue + 0.5) % 360
-    title.TextColor3 = Color3.fromHSV(hue/360,1,1)
-end)
-
--- Close Button
-local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(0,28,0,28)
-closeBtn.Position = UDim2.new(0.78,0,0,4)
-closeBtn.Text = "✖"
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextScaled = true
-closeBtn.BackgroundColor3 = Color3.fromRGB(180,60,60)
-closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0,10)
-
-local closeGlow = Instance.new("UIStroke")
-closeGlow.Parent = closeBtn
-closeGlow.Color = Color3.fromRGB(255,0,100)
-closeGlow.Thickness = 2
-closeGlow.Transparency = 0.6
-
-closeBtn.MouseEnter:Connect(function()
-    TweenService:Create(closeGlow, TweenInfo.new(0.2), {Transparency=0.1, Thickness=4}):Play()
-end)
-closeBtn.MouseLeave:Connect(function()
-    TweenService:Create(closeGlow, TweenInfo.new(0.2), {Transparency=0.6, Thickness=2}):Play()
-end)
-closeBtn.MouseButton1Click:Connect(function()
-    screenGui:Destroy()
-end)
-
--- Toggle Button
+-- Start/Stop Button
 local toggleBtn = Instance.new("TextButton", frame)
-toggleBtn.Size = UDim2.new(0.8,0,0.25,0)
-toggleBtn.Position = UDim2.new(0.1,0,0.35,0)
-toggleBtn.Text = "▶ Start"
-toggleBtn.TextScaled = true
+toggleBtn.Size = UDim2.new(1, -20, 0, 45)
+toggleBtn.Position = UDim2.new(0, 10, 0, 50)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(152, 251, 152)
+toggleBtn.BackgroundTransparency = 0.2
+toggleBtn.BorderSizePixel = 0
 toggleBtn.Font = Enum.Font.GothamBold
-toggleBtn.BackgroundColor3 = Color3.fromRGB(70,200,120)
-toggleBtn.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0,14)
+toggleBtn.TextSize = 16
+toggleBtn.TextColor3 = Color3.fromRGB(0, 128, 0)
+toggleBtn.Text = "▶ Start"
+toggleBtn.AutoButtonColor = false
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 15)
 
-local toggleGlow = Instance.new("UIStroke")
-toggleGlow.Parent = toggleBtn
-toggleGlow.Color = Color3.fromRGB(0,255,255)
-toggleGlow.Thickness = 2
-toggleGlow.Transparency = 0.5
+local toggleStroke = Instance.new("UIStroke", toggleBtn)
+toggleStroke.Color = Color3.fromRGB(0, 128, 0)
+toggleStroke.Thickness = 2
+toggleStroke.Transparency = 0.4
 
 toggleBtn.MouseEnter:Connect(function()
-    TweenService:Create(toggleGlow, TweenInfo.new(0.2), {Transparency=0.1, Thickness=4}):Play()
+    tween(toggleStroke, {Transparency = 0}, 0.15)
+    tween(toggleBtn, {BackgroundTransparency = 0}, 0.2)
 end)
 toggleBtn.MouseLeave:Connect(function()
-    TweenService:Create(toggleGlow, TweenInfo.new(0.2), {Transparency=0.5, Thickness=2}):Play()
+    tween(toggleStroke, {Transparency = 0.4}, 0.2)
+    tween(toggleBtn, {BackgroundTransparency = 0.2}, 0.25)
 end)
 
 isRunning = false
@@ -353,52 +338,103 @@ toggleBtn.MouseButton1Click:Connect(function()
     if not isRunning then
         isRunning = true
         toggleBtn.Text = "■ Stop"
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(200,70,70)
+        tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(255, 99, 71), BackgroundTransparency = 0}, 0.2)
+        tween(toggleStroke, {Color = Color3.fromRGB(255, 99, 71)}, 0.2)
         task.spawn(runRoute)
     else
         isRunning = false
         toggleBtn.Text = "▶ Start"
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(70,200,120)
+        tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(152, 251, 152), BackgroundTransparency = 0.2}, 0.2)
+        tween(toggleStroke, {Color = Color3.fromRGB(0, 128, 0)}, 0.2)
         stopRoute()
     end
 end)
 
--- Speed Controls
+-- Speed Label
 local speedLabel = Instance.new("TextLabel", frame)
-speedLabel.Size = UDim2.new(0.35,0,0.2,0)
-speedLabel.Position = UDim2.new(0.325,0,0.7,0)
+speedLabel.Size = UDim2.new(1, -20, 0, 25)
+speedLabel.Position = UDim2.new(0, 10, 0, 105)
 speedLabel.BackgroundTransparency = 1
-speedLabel.TextColor3 = Color3.fromRGB(180,180,255)
 speedLabel.Font = Enum.Font.GothamBold
-speedLabel.TextScaled = true
-speedLabel.Text = playbackRate.."x"
+speedLabel.TextSize = 13
+speedLabel.TextColor3 = Color3.fromRGB(219, 39, 119)
+speedLabel.Text = "Speed: " .. playbackRate .. "x"
+speedLabel.TextXAlignment = Enum.TextXAlignment.Center
 
+-- Speed Controls
 local speedDown = Instance.new("TextButton", frame)
-speedDown.Size = UDim2.new(0.2,0,0.2,0)
-speedDown.Position = UDim2.new(0.05,0,0.7,0)
-speedDown.Text = "-"
+speedDown.Size = UDim2.new(0.4, -8, 0, 35)
+speedDown.Position = UDim2.new(0, 10, 0, 135)
+speedDown.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+speedDown.BackgroundTransparency = 0.2
+speedDown.BorderSizePixel = 0
 speedDown.Font = Enum.Font.GothamBold
-speedDown.TextScaled = true
-speedDown.BackgroundColor3 = Color3.fromRGB(100,100,100)
-speedDown.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", speedDown).CornerRadius = UDim.new(0,6)
+speedDown.TextSize = 18
+speedDown.TextColor3 = Color3.fromRGB(60, 60, 60)
+speedDown.Text = "−"
+speedDown.AutoButtonColor = false
+Instance.new("UICorner", speedDown).CornerRadius = UDim.new(0, 10)
+
+speedDown.MouseEnter:Connect(function()
+    tween(speedDown, {BackgroundTransparency = 0}, 0.15)
+end)
+speedDown.MouseLeave:Connect(function()
+    tween(speedDown, {BackgroundTransparency = 0.2}, 0.15)
+end)
+
 speedDown.MouseButton1Click:Connect(function()
-    playbackRate = math.max(0.25, playbackRate-0.25)
-    speedLabel.Text = playbackRate.."x"
+    playbackRate = math.max(0.25, playbackRate - 0.25)
+    speedLabel.Text = "Speed: " .. playbackRate .. "x"
 end)
 
 local speedUp = Instance.new("TextButton", frame)
-speedUp.Size = UDim2.new(0.2,0,0.2,0)
-speedUp.Position = UDim2.new(0.75,0,0.7,0)
-speedUp.Text = "+"
+speedUp.Size = UDim2.new(0.4, -8, 0, 35)
+speedUp.Position = UDim2.new(0.5, 8, 0, 135)
+speedUp.BackgroundColor3 = mainColor
+speedUp.BackgroundTransparency = 0.2
+speedUp.BorderSizePixel = 0
 speedUp.Font = Enum.Font.GothamBold
-speedUp.TextScaled = true
-speedUp.BackgroundColor3 = Color3.fromRGB(100,100,150)
-speedUp.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", speedUp).CornerRadius = UDim.new(0,6)
+speedUp.TextSize = 18
+speedUp.TextColor3 = Color3.fromRGB(219, 39, 119)
+speedUp.Text = "+"
+speedUp.AutoButtonColor = false
+Instance.new("UICorner", speedUp).CornerRadius = UDim.new(0, 10)
+
+speedUp.MouseEnter:Connect(function()
+    tween(speedUp, {BackgroundTransparency = 0}, 0.15)
+end)
+speedUp.MouseLeave:Connect(function()
+    tween(speedUp, {BackgroundTransparency = 0.2}, 0.15)
+end)
+
 speedUp.MouseButton1Click:Connect(function()
-    playbackRate = math.min(currentMaxSpeed, playbackRate+0.25)
-    speedLabel.Text = playbackRate.."x"
+    playbackRate = math.min(currentMaxSpeed, playbackRate + 0.25)
+    speedLabel.Text = "Speed: " .. playbackRate .. "x"
+end)
+
+-- Close Button
+local closeBtn = Instance.new("TextButton", frame)
+closeBtn.Size = UDim2.new(1, -20, 0, 35)
+closeBtn.Position = UDim2.new(0, 10, 0, 180)
+closeBtn.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+closeBtn.BackgroundTransparency = 0.2
+closeBtn.BorderSizePixel = 0
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 14
+closeBtn.TextColor3 = Color3.fromRGB(100, 100, 100)
+closeBtn.Text = "✖ Close"
+closeBtn.AutoButtonColor = false
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 15)
+
+closeBtn.MouseEnter:Connect(function()
+    tween(closeBtn, {BackgroundTransparency = 0}, 0.15)
+end)
+closeBtn.MouseLeave:Connect(function()
+    tween(closeBtn, {BackgroundTransparency = 0.2}, 0.15)
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
 end)
 
 -- Clear parameter setelah digunakan
