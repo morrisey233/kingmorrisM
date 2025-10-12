@@ -47,7 +47,7 @@ Title.Text = "💫 WATAX MENU"
 Title.TextXAlignment = Enum.TextXAlignment.Center
 
 -- URL Universal Script
-local UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/universal.lua"
+local UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua"
 
 -- Map List dengan mapKey yang sesuai
 local mapList = {
@@ -160,3 +160,4 @@ end
 -- Update canvas size
 task.wait(0.1)
 Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
+
