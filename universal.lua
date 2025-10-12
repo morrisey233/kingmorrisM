@@ -1,3 +1,9 @@
+-- ============================================
+-- KING MORRIS UNIVERSAL SCRIPT - FIXED
+-- Route Player dengan Auto AFK Integration
+-- Version: 4.1 Fixed
+-- ============================================
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -423,6 +429,11 @@ local function stopRoute()
     stopMovement()
 end
 
+-- Cleanup existing UI
+if game.CoreGui:FindFirstChild("KingMorrisUniversalUI") then
+    game.CoreGui:FindFirstChild("KingMorrisUniversalUI"):Destroy()
+end
+
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "KingMorrisUniversalUI"
 screenGui.IgnoreGuiInset = true
@@ -468,6 +479,7 @@ RunService.RenderStepped:Connect(function()
 end)
 
 toggleBtn = Instance.new("TextButton", frame)
+toggleBtn.Name = "toggleBtn"
 toggleBtn.Size = UDim2.new(1, -16, 0, 40)
 toggleBtn.Position = UDim2.new(0, 8, 0, 45)
 toggleBtn.Text = "▶ Start"
@@ -569,6 +581,10 @@ else
     toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 end
 
+-- CRITICAL: Share button dengan Auto AFK system
+_G.KingMorrisToggleButton = toggleBtn
+print("[King Morris] ✓ Toggle button shared to global")
+
 local isVisible = true
 
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
@@ -599,3 +615,4 @@ end)
 _G.KingMorrisSelectedMap = nil
 print("[King Morris] Ready! Map: " .. mapConfig.name)
 print("[King Morris] F1 = Hide/Show UI | F2 = Start/Stop")
+print("[King Morris] Toggle button tersedia untuk Auto AFK")
