@@ -2,4 +2,4 @@ USERNAME:TIER:EXPIRES
 
 MORRISREST:vip:lifetime
 MORRISRESTO:VIP:lifetime
-DATSVR:vip:lifetime
+datsvr:vip:lifetime
