@@ -7,42 +7,42 @@ local darkPink = Color3.fromRGB(150, 30, 80)
 local lightPink = Color3.fromRGB(255, 179, 217)
 local bgColor = Color3.fromRGB(40, 15, 30)
 
--- API Configuration
-local API_URL = "https://king.morris.baby/ADMINRBX/whitelist_api.php"
+-- GitHub Configuration
+local GITHUB_RAW_URL = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/whitelist.json"
 
 -- Cache untuk menghindari request berulang
 local whitelistCache = {}
 local cacheExpiry = 0
 
 local function checkAccessAPI(username)
-    -- Check cache terlebih dahulu (berlaku 5 menit)
     local currentTime = tick()
     if whitelistCache[username] and currentTime < cacheExpiry then
         return whitelistCache[username]
     end
     
     local success, result = pcall(function()
-        local url = API_URL .. "?action=check&username=" .. HttpService:UrlEncode(username)
-        local response = HttpService:GetAsync(url)
+        pcall(function()
+            if not HttpService.HttpEnabled then
+                HttpService.HttpEnabled = true
+            end
+        end)
+        
+        local response = HttpService:GetAsync(GITHUB_RAW_URL, true)
         return HttpService:JSONDecode(response)
     end)
     
-    if success and result then
-        if result.success then
-            -- User ditemukan di whitelist
-            local userData = result.data
+    if success and result and result.users then
+        local userData = result.users[username]
+        
+        if userData then
+            local isValid = true
+            if userData.expires ~= "lifetime" then
+                local expireDate = userData.expires
+                local today = os.date("%Y-%m-%d")
+                isValid = expireDate >= today
+            end
             
-            -- Check expiration
-            if userData.expires == "lifetime" then
-                whitelistCache[username] = {
-                    allowed = true,
-                    tier = userData.tier,
-                    expires = "lifetime"
-                }
-                cacheExpiry = currentTime + 300 -- Cache 5 menit
-                return whitelistCache[username]
-            else
-                -- Check jika expired (untuk saat ini kita allow dulu)
+            if isValid then
                 whitelistCache[username] = {
                     allowed = true,
                     tier = userData.tier,
@@ -50,23 +50,20 @@ local function checkAccessAPI(username)
                 }
                 cacheExpiry = currentTime + 300
                 return whitelistCache[username]
+            else
+                whitelistCache[username] = {allowed = false}
+                cacheExpiry = currentTime + 60
+                return whitelistCache[username]
             end
         else
-            -- User tidak ditemukan
             whitelistCache[username] = {allowed = false}
-            cacheExpiry = currentTime + 60 -- Cache 1 menit untuk deny
+            cacheExpiry = currentTime + 60
             return whitelistCache[username]
         end
     else
-        warn("⚠️ API Error, falling back to local whitelist")
-        -- Fallback ke whitelist lokal jika API error
-        local LOCAL_WHITELIST = {"MORRISRESTO"}
-        for _, user in ipairs(LOCAL_WHITELIST) do
-            if username == user then
-                return {allowed = true, tier = "premium", expires = "lifetime"}
-            end
-        end
-        return {allowed = false}
+        whitelistCache[username] = {allowed = false}
+        cacheExpiry = currentTime + 60
+        return whitelistCache[username]
     end
 end
 
@@ -397,12 +394,11 @@ task.spawn(function()
     print("👑 KING MORRIS LOADER")
     print("👤 Player: " .. player.Name)
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("🔍 Checking whitelist via API...")
     
     local accessData = checkAccessAPI(player.Name)
     
     if not accessData.allowed then
-        print("❌ Access Denied - Not Whitelisted")
+        print("❌ Access Denied")
         createGUI()
         return
     end
