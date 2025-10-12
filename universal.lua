@@ -1,4 +1,4 @@
--- WataX Universal Route Script
+-- WataX Universal Route Script with Menu Integration
 -- Bisa menerima parameter dari menu utama
 
 local Players = game:GetService("Players")
@@ -7,16 +7,37 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local hrp
 
--- 🗺️ MAP CONFIGURATION DATABASE
+-- 🗺️ MAP CONFIGURATION DATABASE (Updated with speeds dari menu)
 local MAP_DATABASE = {
-    m1 = {name = "Mount Atin", url = "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/10.lua", maxSpeed = 6},
-    m2 = {name = "Mount Yahayuk", url = "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/21.lua", maxSpeed = 3},
-    m3 = {name = "Mount Daun", url = "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/30.lua", maxSpeed = 3},
-    m12 = {name = "Mount Kalista", url = "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/120.lua", maxSpeed = 3},
-    -- Tambahkan map lainnya di sini sesuai kebutuhan
-    -- m4 = {name = "Mount Arunika", url = "...", maxSpeed = 3},
-    -- m5 = {name = "Mount Ravika", url = "...", maxSpeed = 3},
-    -- dst...
+    m1 = {name = "Mount Atin", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m1.lua", maxSpeed = 6, frameTime = 1/30},
+    m2 = {name = "Mount Yahayuk", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m2.lua", maxSpeed = 3, frameTime = 1/30},
+    m3 = {name = "Mount Daun", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m3.lua", maxSpeed = 3, frameTime = 1/30},
+    m4 = {name = "Mount Arunika", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m4.lua", maxSpeed = 3, frameTime = 1/30},
+    m5 = {name = "Mount Ravika", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m5.lua", maxSpeed = 3, frameTime = 1/30},
+    m6 = {name = "Mount Lembayana", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m6.lua", maxSpeed = 3, frameTime = 1/30},
+    m7 = {name = "Mount Sakahayang", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m7.lua", maxSpeed = 3, frameTime = 1/30},
+    m8 = {name = "Mount YNTKTS", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m8.lua", maxSpeed = 3, frameTime = 1/33},
+    m9 = {name = "Mount Hana", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m9.lua", maxSpeed = 3, frameTime = 1/30},
+    m10 = {name = "Mount Stecu", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m10.lua", maxSpeed = 3, frameTime = 1/30},
+    m11 = {name = "Mount Ckptw", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m11.lua", maxSpeed = 3, frameTime = 1/30},
+    m12 = {name = "Mount Kalista", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m12.lua", maxSpeed = 3, frameTime = 1/30},
+    m13 = {name = "Ekspedisi Kaliya", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m13.lua", maxSpeed = 3, frameTime = 1/30},
+    m14 = {name = "Antartika Normal", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m14.lua", maxSpeed = 3, frameTime = 1/30},
+    m15 = {name = "Mount Salvatore", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m15.lua", maxSpeed = 3, frameTime = 1/30},
+    m16 = {name = "Mount Kirey", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m16.lua", maxSpeed = 3, frameTime = 1/30},
+    m17 = {name = "Mount Pargoy", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m17.lua", maxSpeed = 3, frameTime = 1/30},
+    m18 = {name = "Mount Forever", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m18.lua", maxSpeed = 3, frameTime = 1/45},
+    m19 = {name = "Mount Mono", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m19.lua", maxSpeed = 3, frameTime = 1/45},
+    m20 = {name = "Mount Yareuu", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m20.lua", maxSpeed = 3, frameTime = 1/45},
+    m21 = {name = "Mount Serenity", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m21.lua", maxSpeed = 3, frameTime = 1/45},
+    m22 = {name = "Mount Pedaunan", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m22.lua", maxSpeed = 3, frameTime = 1/45},
+    m23 = {name = "Mount Pengangguran", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m23.lua", maxSpeed = 3, frameTime = 1/30},
+    m24 = {name = "Mount Bingung", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m24.lua", maxSpeed = 3, frameTime = 1/32},
+    m25 = {name = "Mount Kawaii", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m25.lua", maxSpeed = 3, frameTime = 1/32},
+    m26 = {name = "Mount Runia", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m26.lua", maxSpeed = 3, frameTime = 1/32},
+    m27 = {name = "Mount Swiss", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m27.lua", maxSpeed = 3, frameTime = 1/32},
+    m28 = {name = "Mount Aneh", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m28.lua", maxSpeed = 3, frameTime = 1/32},
+    m29 = {name = "Mount Lirae", url = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m29.lua", maxSpeed = 3, frameTime = 1/32},
 }
 
 -- 📥 TERIMA PARAMETER DARI MENU (jika ada)
