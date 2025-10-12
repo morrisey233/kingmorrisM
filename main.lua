@@ -1,31 +1,14 @@
--- KING MORRIS SCRIPT LOADER
--- Premium Script Protection System
--- Modern & Professional Design
-
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
--- ═══════════════════════════════════════
--- COLOR SCHEME
--- ═══════════════════════════════════════
 local mainColor = Color3.fromRGB(200, 50, 100)
 local darkPink = Color3.fromRGB(150, 30, 80)
-local lightPink = Color3.fromRGB(255, 120, 170)
+local lightPink = Color3.fromRGB(150, 30, 80)
 local bgColor = Color3.fromRGB(40, 15, 30)
 
--- ═══════════════════════════════════════
--- WHITELIST CONFIGURATION
--- ═══════════════════════════════════════
 local WHITELIST = {
     "MORRISRESTO",
-    -- Add more usernames here:
-    -- "Username2",
-    -- "Username3",
 }
-
--- ═══════════════════════════════════════
--- FUNCTIONS
--- ═══════════════════════════════════════
 
 local function checkAccess()
     local username = Players.LocalPlayer.Name
@@ -37,420 +20,341 @@ local function checkAccess()
     return false
 end
 
-local function createModernGUI()
+local function createGUI()
     local player = Players.LocalPlayer
     local playerGui = player:WaitForChild("PlayerGui")
     
-    -- Main ScreenGui
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "KingMorrisGUI"
     screenGui.ResetOnSpawn = false
     screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     screenGui.DisplayOrder = 999
     
-    -- Background Blur Effect
-    local background = Instance.new("Frame")
-    background.Name = "Background"
-    background.Size = UDim2.new(1, 0, 1, 0)
-    background.Position = UDim2.new(0, 0, 0, 0)
-    background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    background.BackgroundTransparency = 0.4
-    background.BorderSizePixel = 0
-    background.Parent = screenGui
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 420, 0, 500)
+    main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    main.AnchorPoint = Vector2.new(0.5, 0.5)
+    main.BackgroundColor3 = bgColor
+    main.BorderSizePixel = 0
+    main.ClipsDescendants = true
+    main.Parent = screenGui
     
-    -- Main Container
-    local mainFrame = Instance.new("Frame")
-    mainFrame.Name = "MainContainer"
-    mainFrame.Size = UDim2.new(0, 450, 0, 380)
-    mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-    mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    mainFrame.BackgroundColor3 = bgColor
-    mainFrame.BorderSizePixel = 0
-    mainFrame.ClipsDescendants = true
-    mainFrame.Parent = background
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 20)
     
-    local mainCorner = Instance.new("UICorner")
-    mainCorner.CornerRadius = UDim.new(0, 16)
-    mainCorner.Parent = mainFrame
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = mainColor
+    stroke.Thickness = 3
+    stroke.Transparency = 0
     
-    -- Gradient Border Effect
-    local borderGradient = Instance.new("UIStroke")
-    borderGradient.Color = mainColor
-    borderGradient.Thickness = 2
-    borderGradient.Transparency = 0
-    borderGradient.Parent = mainFrame
-    
-    -- Header Section
     local header = Instance.new("Frame")
-    header.Name = "Header"
-    header.Size = UDim2.new(1, 0, 0, 80)
-    header.Position = UDim2.new(0, 0, 0, 0)
+    header.Size = UDim2.new(1, 0, 0, 100)
     header.BackgroundColor3 = mainColor
     header.BorderSizePixel = 0
-    header.Parent = mainFrame
+    header.Parent = main
     
-    local headerCorner = Instance.new("UICorner")
-    headerCorner.CornerRadius = UDim.new(0, 16)
-    headerCorner.Parent = header
+    local headerCorner = Instance.new("UICorner", header)
+    headerCorner.CornerRadius = UDim.new(0, 20)
     
-    -- Fix bottom corner
     local headerFix = Instance.new("Frame")
-    headerFix.Size = UDim2.new(1, 0, 0, 20)
-    headerFix.Position = UDim2.new(0, 0, 1, -20)
+    headerFix.Size = UDim2.new(1, 0, 0, 30)
+    headerFix.Position = UDim2.new(0, 0, 1, -30)
     headerFix.BackgroundColor3 = mainColor
     headerFix.BorderSizePixel = 0
     headerFix.Parent = header
     
-    -- Crown Icon
-    local crownIcon = Instance.new("TextLabel")
-    crownIcon.Name = "CrownIcon"
-    crownIcon.Size = UDim2.new(0, 50, 0, 50)
-    crownIcon.Position = UDim2.new(0, 20, 0, 15)
-    crownIcon.BackgroundTransparency = 1
-    crownIcon.Text = "👑"
-    crownIcon.TextSize = 36
-    crownIcon.Parent = header
+    local gradient = Instance.new("UIGradient", header)
+    gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, mainColor),
+        ColorSequenceKeypoint.new(1, darkPink)
+    }
+    gradient.Rotation = 45
     
-    -- Brand Title
-    local brandTitle = Instance.new("TextLabel")
-    brandTitle.Name = "BrandTitle"
-    brandTitle.Size = UDim2.new(1, -80, 0, 35)
-    brandTitle.Position = UDim2.new(0, 75, 0, 15)
-    brandTitle.BackgroundTransparency = 1
-    brandTitle.Text = "KING MORRIS"
-    brandTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-    brandTitle.TextSize = 28
-    brandTitle.Font = Enum.Font.GothamBold
-    brandTitle.TextXAlignment = Enum.TextXAlignment.Left
-    brandTitle.Parent = header
+    local crown = Instance.new("TextLabel")
+    crown.Size = UDim2.new(0, 60, 0, 60)
+    crown.Position = UDim2.new(0, 25, 0, 20)
+    crown.BackgroundTransparency = 1
+    crown.Text = "👑"
+    crown.TextSize = 42
+    crown.Parent = header
     
-    -- Subtitle
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, -100, 0, 40)
+    title.Position = UDim2.new(0, 90, 0, 20)
+    title.BackgroundTransparency = 1
+    title.Text = "KING MORRIS"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextSize = 32
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = header
+    
     local subtitle = Instance.new("TextLabel")
-    subtitle.Name = "Subtitle"
-    subtitle.Size = UDim2.new(1, -80, 0, 20)
-    subtitle.Position = UDim2.new(0, 75, 0, 50)
+    subtitle.Size = UDim2.new(1, -100, 0, 25)
+    subtitle.Position = UDim2.new(0, 130, 0, 70)
     subtitle.BackgroundTransparency = 1
     subtitle.Text = "Premium Script System"
-    subtitle.TextColor3 = lightPink
-    subtitle.TextSize = 14
-    subtitle.Font = Enum.Font.Gotham
+    subtitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+    subtitle.TextSize = 15
+    subtitle.Font = Enum.Font.GothamBold
     subtitle.TextXAlignment = Enum.TextXAlignment.Left
+    subtitle.TextTransparency = 0
     subtitle.Parent = header
     
-    -- Close Button
     local closeBtn = Instance.new("TextButton")
-    closeBtn.Name = "CloseButton"
-    closeBtn.Size = UDim2.new(0, 35, 0, 35)
-    closeBtn.Position = UDim2.new(1, -45, 0, 10)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 59, 59)
-    closeBtn.Text = "✕"
+    closeBtn.Size = UDim2.new(0, 40, 0, 40)
+    closeBtn.Position = UDim2.new(1, -50, 0, 15)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(40, 15, 30)
+    closeBtn.Text = "❌"
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     closeBtn.TextSize = 20
     closeBtn.Font = Enum.Font.GothamBold
     closeBtn.AutoButtonColor = false
     closeBtn.Parent = header
     
-    local closeBtnCorner = Instance.new("UICorner")
-    closeBtnCorner.CornerRadius = UDim.new(1, 0)
-    closeBtnCorner.Parent = closeBtn
+    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1, 0)
     
-    -- Content Container
+    local closeBtnStroke = Instance.new("UIStroke", closeBtn)
+    closeBtnStroke.Color = Color3.fromRGB(255, 255, 255)
+    closeBtnStroke.Thickness = 2
+    closeBtnStroke.Transparency = 0.3
+    
     local content = Instance.new("Frame")
-    content.Name = "Content"
-    content.Size = UDim2.new(1, -40, 1, -120)
-    content.Position = UDim2.new(0, 20, 0, 90)
+    content.Size = UDim2.new(1, -60, 1, -140)
+    content.Position = UDim2.new(0, 30, 0, 120)
     content.BackgroundTransparency = 1
-    content.Parent = mainFrame
+    content.Parent = main
     
-    -- Status Icon
-    local statusIcon = Instance.new("TextLabel")
-    statusIcon.Name = "StatusIcon"
-    statusIcon.Size = UDim2.new(0, 80, 0, 80)
-    statusIcon.Position = UDim2.new(0.5, 0, 0, 10)
-    statusIcon.AnchorPoint = Vector2.new(0.5, 0)
-    statusIcon.BackgroundColor3 = Color3.fromRGB(30, 20, 25)
-    statusIcon.Text = "🔒"
-    statusIcon.TextSize = 48
-    statusIcon.Font = Enum.Font.GothamBold
-    statusIcon.Parent = content
+    local iconBg = Instance.new("Frame")
+    iconBg.Size = UDim2.new(0, 100, 0, 100)
+    iconBg.Position = UDim2.new(0.5, 0, 0, 20)
+    iconBg.AnchorPoint = Vector2.new(0.5, 0)
+    iconBg.BackgroundColor3 = Color3.fromRGB(30, 20, 28)
+    iconBg.BorderSizePixel = 0
+    iconBg.Parent = content
     
-    local iconCorner = Instance.new("UICorner")
-    iconCorner.CornerRadius = UDim.new(1, 0)
-    iconCorner.Parent = statusIcon
+    Instance.new("UICorner", iconBg).CornerRadius = UDim.new(1, 0)
     
-    local iconStroke = Instance.new("UIStroke")
+    local iconStroke = Instance.new("UIStroke", iconBg)
     iconStroke.Color = mainColor
-    iconStroke.Thickness = 3
-    iconStroke.Parent = statusIcon
+    iconStroke.Thickness = 4
+    iconStroke.Transparency = 0
     
-    -- Title
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Name = "Title"
-    titleLabel.Size = UDim2.new(1, 0, 0, 40)
-    titleLabel.Position = UDim2.new(0, 0, 0, 100)
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Text = "ACCESS DENIED"
-    titleLabel.TextColor3 = lightPink
-    titleLabel.TextSize = 26
-    titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.Parent = content
+    local icon = Instance.new("TextLabel")
+    icon.Size = UDim2.new(1, 0, 1, 0)
+    icon.BackgroundTransparency = 1
+    icon.Text = "🔒"
+    icon.TextSize = 56
+    icon.Parent = iconBg
     
-    -- Description
-    local description = Instance.new("TextLabel")
-    description.Name = "Description"
-    description.Size = UDim2.new(1, 0, 0, 70)
-    description.Position = UDim2.new(0, 0, 0, 145)
-    description.BackgroundTransparency = 1
-    description.Text = "You are not whitelisted.\n\n💎 Want premium access?\nJoin our Discord to purchase!"
-    description.TextColor3 = Color3.fromRGB(220, 180, 200)
-    description.TextSize = 15
-    description.Font = Enum.Font.Gotham
-    description.TextWrapped = true
-    description.TextYAlignment = Enum.TextYAlignment.Top
-    description.Parent = content
+    local deniedText = Instance.new("TextLabel")
+    deniedText.Size = UDim2.new(1, 0, 0, 45)
+    deniedText.Position = UDim2.new(0, 0, 0, 135)
+    deniedText.BackgroundTransparency = 1
+    deniedText.Text = "ACCESS DENIED"
+    deniedText.TextColor3 = lightPink
+    deniedText.TextSize = 28
+    deniedText.Font = Enum.Font.GothamBold
+    deniedText.Parent = content
     
-    -- Discord Button (Single Button)
-    local discordBtn = Instance.new("TextButton")
-    discordBtn.Name = "DiscordButton"
-    discordBtn.Size = UDim2.new(1, 0, 0, 55)
-    discordBtn.Position = UDim2.new(0, 0, 1, -60)
-    discordBtn.BackgroundColor3 = mainColor
-    discordBtn.Text = ""
-    discordBtn.AutoButtonColor = false
-    discordBtn.Parent = content
+    local desc = Instance.new("TextLabel")
+    desc.Size = UDim2.new(1, 0, 0, 90)
+    desc.Position = UDim2.new(0, 0, 0, 185)
+    desc.BackgroundTransparency = 1
+    desc.Text = "You are not whitelisted.\n\n💎 Want premium access?\nJoin our Discord to purchase!"
+    desc.TextColor3 = Color3.fromRGB(230, 190, 210)
+    desc.TextSize = 15
+    desc.Font = Enum.Font.Gotham
+    desc.TextWrapped = true
+    desc.TextYAlignment = Enum.TextYAlignment.Top
+    desc.Parent = content
     
-    local discordCorner = Instance.new("UICorner")
-    discordCorner.CornerRadius = UDim.new(0, 12)
-    discordCorner.Parent = discordBtn
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 0, 65)
+    btn.Position = UDim2.new(0, 0, 1, -70)
+    btn.BackgroundColor3 = mainColor
+    btn.Text = ""
+    btn.AutoButtonColor = false
+    btn.Parent = content
     
-    local discordStroke = Instance.new("UIStroke")
-    discordStroke.Color = lightPink
-    discordStroke.Thickness = 2
-    discordStroke.Transparency = 0.5
-    discordStroke.Parent = discordBtn
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12)
     
-    -- Button Content Container
-    local btnContent = Instance.new("Frame")
-    btnContent.Size = UDim2.new(1, 0, 1, 0)
-    btnContent.BackgroundTransparency = 1
-    btnContent.Parent = discordBtn
+    local btnStroke = Instance.new("UIStroke", btn)
+    btnStroke.Color = lightPink
+    btnStroke.Thickness = 2
+    btnStroke.Transparency = 0.3
     
-    local discordIcon = Instance.new("TextLabel")
-    discordIcon.Size = UDim2.new(0, 35, 0, 35)
-    discordIcon.Position = UDim2.new(0, 15, 0.5, 0)
-    discordIcon.AnchorPoint = Vector2.new(0, 0.5)
-    discordIcon.BackgroundTransparency = 1
-    discordIcon.Text = "📱"
-    discordIcon.TextSize = 28
-    discordIcon.Parent = btnContent
+    local btnGradient = Instance.new("UIGradient", btn)
+    btnGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, mainColor),
+        ColorSequenceKeypoint.new(1, darkPink)
+    }
+    btnGradient.Rotation = 90
     
-    local discordText = Instance.new("TextLabel")
-    discordText.Name = "MainText"
-    discordText.Size = UDim2.new(1, -120, 0, 22)
-    discordText.Position = UDim2.new(0, 55, 0, 8)
-    discordText.BackgroundTransparency = 1
-    discordText.Text = "JOIN DISCORD SERVER"
-    discordText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    discordText.TextSize = 17
-    discordText.Font = Enum.Font.GothamBold
-    discordText.TextXAlignment = Enum.TextXAlignment.Left
-    discordText.Parent = btnContent
+    local btnIcon = Instance.new("TextLabel")
+    btnIcon.Size = UDim2.new(0, 35, 0, 35)
+    btnIcon.Position = UDim2.new(0, 18, 0.5, 0)
+    btnIcon.AnchorPoint = Vector2.new(0, 0.5)
+    btnIcon.BackgroundTransparency = 1
+    btnIcon.Text = "📱"
+    btnIcon.TextSize = 28
+    btnIcon.Parent = btn
     
-    local discordLink = Instance.new("TextLabel")
-    discordLink.Name = "SubText"
-    discordLink.Size = UDim2.new(1, -120, 0, 18)
-    discordLink.Position = UDim2.new(0, 55, 0, 30)
-    discordLink.BackgroundTransparency = 1
-    discordLink.Text = "discord.gg/7Zqmdm5Shq"
-    discordLink.TextColor3 = lightPink
-    discordLink.TextSize = 13
-    discordLink.Font = Enum.Font.Gotham
-    discordLink.TextXAlignment = Enum.TextXAlignment.Left
-    discordLink.Parent = btnContent
+    local btnTitle = Instance.new("TextLabel")
+    btnTitle.Name = "BtnTitle"
+    btnTitle.Size = UDim2.new(1, -135, 0, 26)
+    btnTitle.Position = UDim2.new(0, 60, 0, 10)
+    btnTitle.BackgroundTransparency = 1
+    btnTitle.Text = "JOIN DISCORD SERVER"
+    btnTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btnTitle.TextSize = 17
+    btnTitle.Font = Enum.Font.GothamBold
+    btnTitle.TextXAlignment = Enum.TextXAlignment.Left
+    btnTitle.Parent = btn
     
-    local arrowIcon = Instance.new("TextLabel")
-    arrowIcon.Size = UDim2.new(0, 30, 0, 30)
-    arrowIcon.Position = UDim2.new(1, -40, 0.5, 0)
-    arrowIcon.AnchorPoint = Vector2.new(0, 0.5)
-    arrowIcon.BackgroundTransparency = 1
-    arrowIcon.Text = "→"
-    arrowIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
-    arrowIcon.TextSize = 24
-    arrowIcon.Font = Enum.Font.GothamBold
-    arrowIcon.Parent = btnContent
+    local btnSub = Instance.new("TextLabel")
+    btnSub.Name = "BtnSub"
+    btnSub.Size = UDim2.new(1, -135, 0, 20)
+    btnSub.Position = UDim2.new(0, 60, 0, 34)
+    btnSub.BackgroundTransparency = 1
+    btnSub.Text = "discord.gg/7Zqmdm5Shq"
+    btnSub.TextColor3 = Color3.fromRGB(255, 200, 220)
+    btnSub.TextSize = 13
+    btnSub.Font = Enum.Font.Gotham
+    btnSub.TextXAlignment = Enum.TextXAlignment.Left
+    btnSub.Parent = btn
+    
+    local arrow = Instance.new("TextLabel")
+    arrow.Name = "Arrow"
+    arrow.Size = UDim2.new(0, 35, 0, 35)
+    arrow.Position = UDim2.new(1, -45, 0.5, 0)
+    arrow.AnchorPoint = Vector2.new(0, 0.5)
+    arrow.BackgroundTransparency = 1
+    arrow.Text = "→"
+    arrow.TextColor3 = Color3.fromRGB(255, 255, 255)
+    arrow.TextSize = 26
+    arrow.Font = Enum.Font.GothamBold
+    arrow.Parent = btn
     
     screenGui.Parent = playerGui
     
-    -- ═══════════════════════════════════════
-    -- ANIMATIONS
-    -- ═══════════════════════════════════════
+    main.Size = UDim2.new(0, 0, 0, 0)
+    TweenService:Create(main, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Size = UDim2.new(0, 420, 0, 500)
+    }):Play()
     
-    -- Entrance Animation
-    mainFrame.Size = UDim2.new(0, 0, 0, 0)
-    local openTween = TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Size = UDim2.new(0, 450, 0, 380)
-    })
-    openTween:Play()
-    
-    -- Pulse animation for icon
     task.spawn(function()
-        while statusIcon.Parent do
-            TweenService:Create(statusIcon, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Size = UDim2.new(0, 85, 0, 85)
+        while iconBg.Parent do
+            TweenService:Create(iconBg, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Size = UDim2.new(0, 105, 0, 105)
             }):Play()
-            TweenService:Create(iconStroke, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            TweenService:Create(iconStroke, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Thickness = 5
+            }):Play()
+            wait(1.2)
+            TweenService:Create(iconBg, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Size = UDim2.new(0, 100, 0, 100)
+            }):Play()
+            TweenService:Create(iconStroke, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
                 Thickness = 4
             }):Play()
-            wait(1)
-            TweenService:Create(statusIcon, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Size = UDim2.new(0, 80, 0, 80)
-            }):Play()
-            TweenService:Create(iconStroke, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                Thickness = 3
-            }):Play()
-            wait(1)
+            wait(1.2)
         end
     end)
     
-    -- ═══════════════════════════════════════
-    -- BUTTON FUNCTIONS
-    -- ═══════════════════════════════════════
-    
-    -- Close Button
     closeBtn.MouseButton1Click:Connect(function()
-        local closeTween = TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+        TweenService:Create(main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
             Size = UDim2.new(0, 0, 0, 0)
-        })
-        closeTween:Play()
-        closeTween.Completed:Wait()
+        }):Play()
+        wait(0.4)
         screenGui:Destroy()
     end)
     
     closeBtn.MouseEnter:Connect(function()
         TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(255, 80, 80),
-            Size = UDim2.new(0, 38, 0, 38)
+            BackgroundColor3 = Color3.fromRGB(255, 59, 59),
+            Size = UDim2.new(0, 44, 0, 44)
+        }):Play()
+        TweenService:Create(closeBtnStroke, TweenInfo.new(0.2), {
+            Transparency = 0,
+            Thickness = 3
         }):Play()
     end)
     
     closeBtn.MouseLeave:Connect(function()
         TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(255, 59, 59),
-            Size = UDim2.new(0, 35, 0, 35)
+            BackgroundColor3 = Color3.fromRGB(40, 15, 30),
+            Size = UDim2.new(0, 40, 0, 40)
+        }):Play()
+        TweenService:Create(closeBtnStroke, TweenInfo.new(0.2), {
+            Transparency = 0.3,
+            Thickness = 2
         }):Play()
     end)
     
-    -- Discord Button
-    discordBtn.MouseButton1Click:Connect(function()
-        -- Open Discord
+    btn.MouseButton1Click:Connect(function()
         pcall(function()
             game:GetService("GuiService"):OpenBrowserWindow("https://discord.gg/7Zqmdm5Shq")
         end)
-        
-        -- Copy to clipboard
         setclipboard("https://discord.gg/7Zqmdm5Shq")
         
-        -- Success feedback
-        discordText.Text = "✅ OPENED & COPIED!"
-        discordLink.Text = "Link copied to clipboard"
-        arrowIcon.Text = "✓"
+        btnTitle.Text = "✅ SUCCESS!"
+        btnSub.Text = "Link copied & opened"
+        arrow.Text = "✓"
         
-        TweenService:Create(discordBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(67, 181, 129)
-        }):Play()
-        
-        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
-            Color = Color3.fromRGB(100, 255, 150)
-        }):Play()
+        TweenService:Create(btn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(67, 181, 129)}):Play()
+        TweenService:Create(btnStroke, TweenInfo.new(0.3), {Color = Color3.fromRGB(100, 255, 150)}):Play()
         
         wait(2.5)
         
-        -- Reset
-        discordText.Text = "JOIN DISCORD SERVER"
-        discordLink.Text = "discord.gg/7Zqmdm5Shq"
-        arrowIcon.Text = "→"
+        btnTitle.Text = "JOIN DISCORD SERVER"
+        btnSub.Text = "discord.gg/7Zqmdm5Shq"
+        arrow.Text = "→"
         
-        TweenService:Create(discordBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = mainColor
-        }):Play()
-        
-        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
-            Color = lightPink
-        }):Play()
+        TweenService:Create(btn, TweenInfo.new(0.3), {BackgroundColor3 = mainColor}):Play()
+        TweenService:Create(btnStroke, TweenInfo.new(0.3), {Color = lightPink}):Play()
     end)
     
-    discordBtn.MouseEnter:Connect(function()
-        TweenService:Create(discordBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = darkPink,
-            Size = UDim2.new(1, 0, 0, 58)
-        }):Play()
-        
-        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
-            Transparency = 0,
-            Thickness = 3
-        }):Play()
-        
-        TweenService:Create(arrowIcon, TweenInfo.new(0.2), {
-            Position = UDim2.new(1, -35, 0.5, 0)
-        }):Play()
+    btn.MouseEnter:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 68)}):Play()
+        TweenService:Create(btnStroke, TweenInfo.new(0.2), {Transparency = 0, Thickness = 3}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.2), {Position = UDim2.new(1, -38, 0.5, 0)}):Play()
     end)
     
-    discordBtn.MouseLeave:Connect(function()
-        TweenService:Create(discordBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = mainColor,
-            Size = UDim2.new(1, 0, 0, 55)
-        }):Play()
-        
-        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
-            Transparency = 0.5,
-            Thickness = 2
-        }):Play()
-        
-        TweenService:Create(arrowIcon, TweenInfo.new(0.2), {
-            Position = UDim2.new(1, -40, 0.5, 0)
-        }):Play()
+    btn.MouseLeave:Connect(function()
+        TweenService:Create(btn, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 65)}):Play()
+        TweenService:Create(btnStroke, TweenInfo.new(0.2), {Transparency = 0.3, Thickness = 2}):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.2), {Position = UDim2.new(1, -45, 0.5, 0)}):Play()
     end)
 end
 
 local function safeLoad(url, name)
-    local success, result = pcall(function()
+    local success = pcall(function()
         local script = game:HttpGet(url)
         local func = loadstring(script)
-        if func then
-            func()
-            return true
-        end
-        return false
+        if func then func() end
     end)
-    
-    if success and result then
-        print("✅ " .. name .. " loaded successfully")
+    if success then
+        print("✅ " .. name .. " loaded")
     else
-        warn("⚠️ Failed to load " .. name)
+        warn("⚠️ Failed: " .. name)
     end
 end
-
--- ═══════════════════════════════════════
--- MAIN EXECUTION
--- ═══════════════════════════════════════
 
 task.spawn(function()
     local player = Players.LocalPlayer
     
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     print("👑 KING MORRIS LOADER")
-    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     print("👤 Player: " .. player.Name)
-    print("🔍 Checking access...")
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     
     if not checkAccess() then
         print("❌ Access Denied")
-        createModernGUI()
+        createGUI()
         return
     end
     
-    print("✅ Access Granted!")
-    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("✅ Access Granted")
     
     if not player.Character then
         player.CharacterAdded:Wait()
@@ -458,22 +362,10 @@ task.spawn(function()
     
     wait(2)
     
-    print("📥 Loading scripts...")
-    
-    safeLoad(
-        "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/menu.lua",
-        "Menu System"
-    )
-    
+    safeLoad("https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/menu.lua", "Menu")
     wait(1)
+    safeLoad("https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua", "Universal")
     
-    safeLoad(
-        "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua",
-        "Universal System"
-    )
-    
-    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     print("🎉 All systems loaded!")
-    print("✨ Enjoy KING MORRIS Script!")
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 end)
