@@ -1,7 +1,7 @@
 -- ============================================
--- KING MORRIS UNIVERSAL SCRIPT - FIXED
--- Route Player dengan Auto AFK Integration
--- Version: 4.1 Fixed
+-- KING MORRIS UNIVERSAL SCRIPT - COMPLETE
+-- Route Player with Auto AFK Integration
+-- Version: 5.0 Ultimate
 -- ============================================
 
 local Players = game:GetService("Players")
@@ -12,183 +12,35 @@ local player = Players.LocalPlayer
 local hrp
 
 local MAP_ROUTES = {
-    m1 = {
-        name = "Mount Atin",
-        maxSpeed = 6,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/10.lua"}
-    },
-    m2 = {
-        name = "Mount Yahayuk",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/21.lua"}
-    },
-    m12 = {
-        name = "Mount Kalista",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/120.lua"}
-    },
-    m3 = {
-        name = "Mount Daun",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/30.lua"}
-    },
-    m4 = {
-        name = "Mount Arunika",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/40.lua"}
-    },
-    m6 = {
-        name = "Mount Lembayana",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/60.lua",
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/61.lua"
-        }
-    },
-    m8 = {
-        name = "Mount YNTKTS",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/80.lua"}
-    },
-    m7 = {
-        name = "Mount Sakahayang",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/70.lua"}
-    },
-    m9 = {
-        name = "Mount Hana",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/90.lua"}
-    },
-    m10 = {
-        name = "Mount Stecu",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/100.lua"}
-    },
-    m11 = {
-        name = "Mount Ckptw",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/110.lua"}
-    },
-    m5 = {
-        name = "Mount Ravika",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/50.lua"}
-    },
-    m14 = {
-        name = "Antartika Normal",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/140.lua"}
-    },
-    m15 = {
-        name = "Mount Salvatore",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/150.lua"}
-    },
-    m16 = {
-        name = "Mount Kirey",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/160.lua"}
-    },
-    m17 = {
-        name = "Mount Pargoy",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/170.lua"}
-    },
-    m13 = {
-        name = "Ekspedisi Kaliya",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/130.lua"}
-    },
-    m18 = {
-        name = "Mount Forever",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/180.lua"}
-    },
-    m19 = {
-        name = "Mount Mono",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/190.lua"}
-    },
-    m20 = {
-        name = "Mount Yareuu",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/200.lua"}
-    },
-    m21 = {
-        name = "Mount Serenity",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/210.lua"}
-    },
-    m22 = {
-        name = "Mount Pedaunan",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/220.lua"}
-    },
-    m23 = {
-        name = "Mount Pengangguran",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/230.lua"}
-    },
-    m24 = {
-        name = "Mount Bingung",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/240.lua"}
-    },
-    m25 = {
-        name = "Mount Kawaii",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/250.lua"}
-    },
-    m26 = {
-        name = "Mount Runia",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/260.lua"}
-    },
-    m27 = {
-        name = "Mount Swiss",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/270.lua"}
-    },
-    m28 = {
-        name = "Mount Aneh",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/280.lua"}
-    },
-    m29 = {
-        name = "Mount Lirae",
-        maxSpeed = 3,
-        frameTime = 1/30,
-        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/290.lua"}
-    }
+    m1 = {name = "Mount Atin", maxSpeed = 6, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/10.lua"}},
+    m2 = {name = "Mount Yahayuk", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/21.lua"}},
+    m12 = {name = "Mount Kalista", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/120.lua"}},
+    m3 = {name = "Mount Daun", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/30.lua"}},
+    m4 = {name = "Mount Arunika", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/40.lua"}},
+    m6 = {name = "Mount Lembayana", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/60.lua", "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/61.lua"}},
+    m8 = {name = "Mount YNTKTS", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/80.lua"}},
+    m7 = {name = "Mount Sakahayang", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/70.lua"}},
+    m9 = {name = "Mount Hana", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/90.lua"}},
+    m10 = {name = "Mount Stecu", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/100.lua"}},
+    m11 = {name = "Mount Ckptw", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/110.lua"}},
+    m5 = {name = "Mount Ravika", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/50.lua"}},
+    m14 = {name = "Antartika Normal", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/140.lua"}},
+    m15 = {name = "Mount Salvatore", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/150.lua"}},
+    m16 = {name = "Mount Kirey", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/160.lua"}},
+    m17 = {name = "Mount Pargoy", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/170.lua"}},
+    m13 = {name = "Ekspedisi Kaliya", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/130.lua"}},
+    m18 = {name = "Mount Forever", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/180.lua"}},
+    m19 = {name = "Mount Mono", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/190.lua"}},
+    m20 = {name = "Mount Yareuu", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/200.lua"}},
+    m21 = {name = "Mount Serenity", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/210.lua"}},
+    m22 = {name = "Mount Pedaunan", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/220.lua"}},
+    m23 = {name = "Mount Pengangguran", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/230.lua"}},
+    m24 = {name = "Mount Bingung", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/240.lua"}},
+    m25 = {name = "Mount Kawaii", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/250.lua"}},
+    m26 = {name = "Mount Runia", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/260.lua"}},
+    m27 = {name = "Mount Swiss", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/270.lua"}},
+    m28 = {name = "Mount Aneh", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/280.lua"}},
+    m29 = {name = "Mount Lirae", maxSpeed = 3, frameTime = 1/30, routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/290.lua"}}
 }
 
 local selectedMapKey = _G.KingMorrisSelectedMap or "m1"
@@ -275,9 +127,7 @@ if player.Character then refreshHRP(player.Character) end
 
 local function setupMovement(char)
     task.spawn(function()
-        if not char then
-            char = player.Character or player.CharacterAdded:Wait()
-        end
+        if not char then char = player.Character or player.CharacterAdded:Wait() end
         local humanoid = char:WaitForChild("Humanoid", 5)
         local root = char:WaitForChild("HumanoidRootPart", 5)
         if not humanoid or not root then return end
@@ -323,9 +173,7 @@ local function setupMovement(char)
             if deltaY > 0.9 and not jumpCooldown then
                 humanoid.Jump = true
                 jumpCooldown = true
-                task.delay(0.4, function()
-                    jumpCooldown = false
-                end)
+                task.delay(0.4, function() jumpCooldown = false end)
             end
 
             lastPos = root.Position
@@ -343,13 +191,8 @@ if player.Character then
     setupMovement(player.Character)
 end
 
-local function startMovement() 
-    isMoving = true 
-end
-
-local function stopMovement() 
-    isMoving = false 
-end
+local function startMovement() isMoving = true end
+local function stopMovement() isMoving = false end
 
 local function getNearestRoute()
     local nearestIdx, dist = 1, math.huge
@@ -429,7 +272,6 @@ local function stopRoute()
     stopMovement()
 end
 
--- Cleanup existing UI
 if game.CoreGui:FindFirstChild("KingMorrisUniversalUI") then
     game.CoreGui:FindFirstChild("KingMorrisUniversalUI"):Destroy()
 end
@@ -517,6 +359,26 @@ toggleBtn.MouseButton1Click:Connect(function()
     end
 end)
 
+_G.KingMorrisToggleButton = toggleBtn
+_G.KingMorrisToggleFunction = function()
+    if not isRunning then
+        isRunning = true
+        toggleBtn.Text = "■ Stop"
+        pcall(function() tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(180, 40, 80)}, 0.2) end)
+        task.spawn(runRoute)
+        print("[King Morris] Route started via global function")
+    else
+        isRunning = false
+        toggleBtn.Text = "▶ Start"
+        pcall(function() tween(toggleBtn, {BackgroundColor3 = mainColor}, 0.2) end)
+        stopRoute()
+        print("[King Morris] Route stopped via global function")
+    end
+end
+_G.KingMorrisIsRunning = function() return isRunning end
+print("[King Morris] ✓ Toggle button shared to global")
+print("[King Morris] ✓ Toggle function shared to global")
+
 local speedLabel = Instance.new("TextLabel", frame)
 speedLabel.Size = UDim2.new(0.35, 0, 0, 30)
 speedLabel.Position = UDim2.new(0.325, 0, 0, 95)
@@ -581,10 +443,6 @@ else
     toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 end
 
--- CRITICAL: Share button dengan Auto AFK system
-_G.KingMorrisToggleButton = toggleBtn
-print("[King Morris] ✓ Toggle button shared to global")
-
 local isVisible = true
 
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
@@ -615,4 +473,4 @@ end)
 _G.KingMorrisSelectedMap = nil
 print("[King Morris] Ready! Map: " .. mapConfig.name)
 print("[King Morris] F1 = Hide/Show UI | F2 = Start/Stop")
-print("[King Morris] Toggle button tersedia untuk Auto AFK")
+print("[King Morris] Toggle button available for Auto AFK")
