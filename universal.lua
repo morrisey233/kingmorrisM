@@ -1,5 +1,6 @@
 -- ========================================
--- WATAX UNIVERSAL.LUA - AUTO DETECT ROUTE
+-- WATAX UNIVERSAL.LUA - FIXED COMPLETE
+-- Auto-detect route berdasarkan pilihan menu
 -- ========================================
 
 local Players = game:GetService("Players")
@@ -250,13 +251,15 @@ local selectedMapKey = _G.WataXSelectedMap or "m1"
 local mapConfig = MAP_ROUTES[selectedMapKey]
 
 if not mapConfig then
-    warn("[WataX Universal] Invalid map key: " .. tostring(selectedMapKey))
-    warn("[WataX Universal] Defaulting to Mount Atin (m1)")
+    warn("[WataX] ❌ Invalid map key: " .. tostring(selectedMapKey))
+    warn("[WataX] Defaulting to Mount Atin (m1)")
     selectedMapKey = "m1"
     mapConfig = MAP_ROUTES["m1"]
 end
 
-print("[WataX Universal] ✅ Loading: " .. mapConfig.name)
+print("[WataX] ========================================")
+print("[WataX] 🗺️ Selected Map: " .. mapConfig.name)
+print("[WataX] ========================================")
 
 -- Variables
 local routes = {}
@@ -267,6 +270,7 @@ local playbackRate = 1
 local isReplayRunning = false
 local currentMaxSpeed = mapConfig.maxSpeed
 local isRunning = false
+local toggleBtn
 
 -- Tween Helper
 local function tween(obj, props, dur)
@@ -275,13 +279,20 @@ end
 
 -- Load Route from URL
 local function loadRoute(url)
-    local ok, data = pcall(function()
-        return loadstring(game:HttpGet(url))()
+    local success, result = pcall(function()
+        local httpResult = game:HttpGet(url)
+        return loadstring(httpResult)()
     end)
-    if ok and typeof(data) == "table" and #data > 0 then
-        return data
+    
+    if success and typeof(result) == "table" and #result > 0 then
+        return result
+    else
+        warn("[WataX] ❌ Failed to load route from: " .. url)
+        if not success then
+            warn("[WataX] Error: " .. tostring(result))
+        end
+        return nil
     end
-    return nil
 end
 
 -- Adjust Route Height
@@ -303,24 +314,29 @@ local function adjustRoute(frames)
 end
 
 -- Load all routes for selected map
-local function loadMapRoutes()
+local function loadAllRoutes()
     routes = {}
+    print("[WataX] 📥 Loading routes for: " .. mapConfig.name)
+    
     for i, link in ipairs(mapConfig.routes) do
-        print("[WataX Universal] Loading route " .. i .. "...")
+        print("[WataX] 🔗 Fetching route " .. i .. "...")
+        
         local mapData = loadRoute(link)
-        if mapData then
-            table.insert(routes, {"Route " .. i, adjustRoute(mapData)})
-            print("[WataX Universal] ✅ Route " .. i .. " loaded (" .. #mapData .. " frames)")
+        
+        if mapData and #mapData > 0 then
+            local adjustedData = adjustRoute(mapData)
+            table.insert(routes, {"Route " .. i, adjustedData})
+            print("[WataX] ✅ Route " .. i .. " loaded successfully (" .. #mapData .. " frames)")
         else
-            warn("[WataX Universal] ❌ Failed to load route " .. i)
+            warn("[WataX] ❌ Route " .. i .. " failed to load")
         end
     end
     
     if #routes > 0 then
-        print("[WataX Universal] 🎉 Successfully loaded " .. #routes .. " route(s) for " .. mapConfig.name)
+        print("[WataX] 🎉 Total routes loaded: " .. #routes)
         return true
     else
-        warn("[WataX Universal] ❌ No routes loaded!")
+        warn("[WataX] ❌ No routes could be loaded!")
         return false
     end
 end
@@ -345,7 +361,7 @@ local function setupMovement(char)
         if not humanoid or not root then return end
 
         humanoid.Died:Connect(function()
-            print("[WataX Universal] Character died, stopping replay...")
+            print("[WataX] 💀 Character died, stopping replay...")
             isReplayRunning = false
             stopMovement()
             isRunning = false
@@ -406,8 +422,15 @@ if player.Character then
     setupMovement(player.Character)
 end
 
-local function startMovement() isMoving = true end
-local function stopMovement() isMoving = false end
+local function startMovement() 
+    isMoving = true 
+    print("[WataX] ▶️ Movement started")
+end
+
+local function stopMovement() 
+    isMoving = false 
+    print("[WataX] ⏸️ Movement stopped")
+end
 
 -- Route Navigation
 local function getNearestRoute()
@@ -459,7 +482,7 @@ end
 
 local function runRoute()
     if #routes == 0 then
-        warn("[WataX Universal] No routes loaded!")
+        warn("[WataX] ❌ No routes loaded!")
         return
     end
     if not hrp then refreshHRP() end
@@ -472,27 +495,32 @@ local function runRoute()
     
     if #frames < 2 then
         isReplayRunning = false
-        warn("[WataX Universal] Not enough frames in route!")
+        warn("[WataX] ❌ Not enough frames in route!")
         return
     end
     
     local startIdx = getNearestFrameIndex(frames)
-    print("[WataX Universal] 🏃 Starting from frame " .. startIdx .. "/" .. #frames)
+    print("[WataX] 🏃 Starting from frame " .. startIdx .. "/" .. #frames .. " (Route " .. idx .. ")")
     
     for i = startIdx, #frames - 1 do
-        if not isReplayRunning then break end
+        if not isReplayRunning then 
+            print("[WataX] ⏹️ Route stopped by user")
+            break 
+        end
         lerpCF(frames[i], frames[i + 1])
+    end
+    
+    if isReplayRunning then
+        print("[WataX] ✅ Route completed!")
     end
     
     isReplayRunning = false
     stopMovement()
-    print("[WataX Universal] ✅ Route completed!")
 end
 
 local function stopRoute()
     isReplayRunning = false
     stopMovement()
-    print("[WataX Universal] ⏹️ Route stopped")
 end
 
 -- ========================================
@@ -565,7 +593,7 @@ end)
 closeBtn.MouseButton1Click:Connect(function()
     stopRoute()
     screenGui:Destroy()
-    print("[WataX Universal] UI closed")
+    print("[WataX] 🚪 UI closed")
 end)
 
 -- Start/Stop Button
@@ -633,7 +661,7 @@ Instance.new("UICorner", speedDown).CornerRadius = UDim.new(0, 8)
 speedDown.MouseButton1Click:Connect(function()
     playbackRate = math.max(0.25, playbackRate - 0.25)
     speedLabel.Text = playbackRate .. "x"
-    print("[WataX Universal] Speed: " .. playbackRate .. "x")
+    print("[WataX] ⚡ Speed: " .. playbackRate .. "x")
 end)
 
 -- Speed Up Button
@@ -652,7 +680,7 @@ Instance.new("UICorner", speedUp).CornerRadius = UDim.new(0, 8)
 speedUp.MouseButton1Click:Connect(function()
     playbackRate = math.min(currentMaxSpeed, playbackRate + 0.25)
     speedLabel.Text = playbackRate .. "x"
-    print("[WataX Universal] Speed: " .. playbackRate .. "x")
+    print("[WataX] ⚡ Speed: " .. playbackRate .. "x")
 end)
 
 -- Info Label
@@ -663,18 +691,27 @@ infoLabel.BackgroundTransparency = 1
 infoLabel.TextColor3 = Color3.fromRGB(150, 150, 200)
 infoLabel.Font = Enum.Font.Gotham
 infoLabel.TextSize = 9
-infoLabel.Text = "Routes: " .. #routes .. " | Max Speed: " .. currentMaxSpeed .. "x"
+infoLabel.Text = "Loading routes..."
 infoLabel.TextXAlignment = Enum.TextXAlignment.Center
 
 -- Load routes dan show UI
-if loadMapRoutes() then
-    print("[WataX Universal] 🎮 UI loaded successfully!")
-    print("[WataX Universal] Press Start to begin auto-walk")
+print("[WataX] 📦 Loading routes...")
+local loadSuccess = loadAllRoutes()
+
+if loadSuccess then
+    print("[WataX] 🎮 UI loaded successfully!")
+    print("[WataX] ✨ Press Start to begin auto-walk")
+    infoLabel.Text = "Routes: " .. #routes .. " | Max Speed: " .. currentMaxSpeed .. "x"
 else
-    warn("[WataX Universal] Failed to load routes!")
+    warn("[WataX] ❌ Failed to load routes!")
     infoLabel.Text = "❌ Failed to load routes"
     infoLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+    toggleBtn.Text = "❌ No Routes"
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
 end
 
 -- Cleanup _G variable
 _G.WataXSelectedMap = nil
+print("[WataX] ========================================")
+print("[WataX] Ready! Map: " .. mapConfig.name)
+print("[WataX] ========================================")
