@@ -12,7 +12,6 @@ ScreenGui.IgnoreGuiInset = true
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = gui
 
-
 local mainColor = Color3.fromRGB(255, 105, 180)
 local hoverBright = Color3.fromRGB(255, 182, 193)
 local bgTrans = 0.15
@@ -20,7 +19,6 @@ local bgTrans = 0.15
 local function tween(obj, props, dur)
 	TweenService:Create(obj, TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
 end
-
 
 local Phone = Instance.new("Frame")
 Phone.Name = "Phone"
@@ -38,8 +36,6 @@ stroke.Thickness = 3
 stroke.Color = mainColor
 stroke.Transparency = 0.3
 
-
--- Title untuk Auto Walk
 local Title = Instance.new("TextLabel")
 Title.Parent = Phone
 Title.Size = UDim2.new(1, -20, 0, 30)
@@ -51,39 +47,41 @@ Title.TextColor3 = Color3.fromRGB(219, 39, 119)
 Title.Text = "💖 MORRIS SCRIPT"
 Title.TextXAlignment = Enum.TextXAlignment.Center
 
+-- 🗺️ UNIVERSAL SCRIPT URL
+local UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/universal.lua"
 
+-- ✅ Mapping mapKey dengan text yang lebih rapi
 local autoWalkList = {
-    {text="Mount Atin", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m1.lua"},
-    {text="Mount Yahayuk", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m2.lua"},
-    {text="Mount Kalista", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m12.lua"},
-    {text="Mount Daun",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m3.lua"},
-    {text="Mount Arunika",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m4.lua"},
-    {text="Mount Lembayana",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m6.lua"},
-    {text="Mount YNTKTS",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m8.lua"},
-    {text="Mount Sakahayang",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m7.lua"},
-    {text="Mount Hana",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m9.lua"},
-    {text="Mount Stecu",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m10.lua"},
-    {text="Mount Ckptw",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m11.lua"},
-    {text="Mount Ravika",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m5.lua"},
-    {text="Antartika Normal",  link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m14.lua"},
-    {text="Mount Salvatore", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m15.lua"},
-    {text="Mount Kirey", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m16.lua"},
-    {text="Mount Pargoy", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m17.lua"},
-    {text="Ekspedisi Kaliya", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m13.lua"},
-    {text="Mount Forever", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m18.lua"},
-    {text="Mount Mono", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m19.lua"},
-    {text="Mount Yareuu", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m20.lua"},
-    {text="Mount Serenity", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m21.lua"},
-    {text="Mount Pedaunan", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m22.lua"},
-    {text="Mount Pengangguran", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m23.lua"},
-    {text="Mount Bingung", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m24.lua"},
-    {text="Mount Kawaii", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m25.lua"},
-    {text="Mount Runia", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m26.lua"},
-    {text="Mount Swiss", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m27.lua"},
-    {text="Mount Aneh", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m28.lua"},
-    {text="Mount Lirae", link="https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/m29.lua"},
+    {text="Mount Atin", mapKey="m1"},
+    {text="Mount Yahayuk", mapKey="m2"},
+    {text="Mount Daun", mapKey="m3"},
+    {text="Mount Arunika", mapKey="m4"},
+    {text="Mount Ravika", mapKey="m5"},
+    {text="Mount Lembayana", mapKey="m6"},
+    {text="Mount Sakahayang", mapKey="m7"},
+    {text="Mount YNTKTS", mapKey="m8"},
+    {text="Mount Hana", mapKey="m9"},
+    {text="Mount Stecu", mapKey="m10"},
+    {text="Mount Ckptw", mapKey="m11"},
+    {text="Mount Kalista", mapKey="m12"},
+    {text="Ekspedisi Kaliya", mapKey="m13"},
+    {text="Antartika Normal", mapKey="m14"},
+    {text="Mount Salvatore", mapKey="m15"},
+    {text="Mount Kirey", mapKey="m16"},
+    {text="Mount Pargoy", mapKey="m17"},
+    {text="Mount Forever", mapKey="m18"},
+    {text="Mount Mono", mapKey="m19"},
+    {text="Mount Yareuu", mapKey="m20"},
+    {text="Mount Serenity", mapKey="m21"},
+    {text="Mount Pedaunan", mapKey="m22"},
+    {text="Mount Pengangguran", mapKey="m23"},
+    {text="Mount Bingung", mapKey="m24"},
+    {text="Mount Kawaii", mapKey="m25"},
+    {text="Mount Runia", mapKey="m26"},
+    {text="Mount Swiss", mapKey="m27"},
+    {text="Mount Aneh", mapKey="m28"},
+    {text="Mount Lirae", mapKey="m29"},
 }
-
 
 local Scroll = Instance.new("ScrollingFrame")
 Scroll.Parent = Phone
@@ -98,7 +96,6 @@ Scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 local Layout = Instance.new("UIListLayout", Scroll)
 Layout.Padding = UDim.new(0, 6)
 Layout.SortOrder = Enum.SortOrder.LayoutOrder
-
 
 -- Buat tombol untuk setiap Mount
 for i, info in ipairs(autoWalkList) do
@@ -134,16 +131,21 @@ for i, info in ipairs(autoWalkList) do
 	end)
 	b.MouseButton1Click:Connect(function()
 		b.Text = "Loading..."
+		
+		-- ✅ Set parameter map sebelum load universal script
+		_G.WataXSelectedMap = info.mapKey
+		
 		local ok, err = pcall(function()
-			local code = game:HttpGet(info.link)
+			local code = game:HttpGet(UNIVERSAL_SCRIPT)
 			loadstring(code)()
 		end)
 		if ok then
-			-- Langsung hapus semua UI setelah berhasil load
+			-- Langsung hapus menu setelah berhasil load
 			ScreenGui:Destroy()
 		else 
 			b.Text = "✗ Error"
-			warn("Error loading:", err)
+			warn("[Menu] Error loading:", err)
+			_G.WataXSelectedMap = nil -- Reset jika error
 			wait(2)
 			b.Text = info.text
 		end
@@ -153,4 +155,3 @@ end
 -- Update canvas size setelah semua button dibuat
 wait(0.1)
 Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
-
