@@ -3,17 +3,20 @@ local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local gui = player:WaitForChild("PlayerGui")
 
-if gui:FindFirstChild("WataXMenuUI") then gui.WataXMenuUI:Destroy() end
+if gui:FindFirstChild("KingMorrisMenuUI") then 
+    gui.KingMorrisMenuUI:Destroy() 
+end
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "WataXMenuUI"
+ScreenGui.Name = "KingMorrisMenuUI"
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = gui
 
-local mainColor = Color3.fromRGB(255, 105, 180)
-local hoverBright = Color3.fromRGB(255, 182, 193)
-local bgTrans = 0.15
+local mainColor = Color3.fromRGB(200, 50, 100)
+local darkPink = Color3.fromRGB(150, 30, 80)
+local lightPink = Color3.fromRGB(255, 120, 170)
+local bgColor = Color3.fromRGB(40, 15, 30)
 
 local function tween(obj, props, dur)
     TweenService:Create(obj, TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
@@ -24,16 +27,16 @@ Phone.Name = "Phone"
 Phone.Parent = ScreenGui
 Phone.Size = UDim2.new(0, 200, 0, 400)
 Phone.Position = UDim2.new(0.05, 0, 0.2, 0)
-Phone.BackgroundColor3 = Color3.fromRGB(50, 30, 70)
-Phone.BackgroundTransparency = 0.3
+Phone.BackgroundColor3 = bgColor
+Phone.BackgroundTransparency = 0.2
 Phone.Active = true
 Phone.Draggable = true
 Instance.new("UICorner", Phone).CornerRadius = UDim.new(0, 20)
 
 local stroke = Instance.new("UIStroke", Phone)
 stroke.Thickness = 3
-stroke.Color = Color3.fromRGB(180, 120, 255)
-stroke.Transparency = 0.4
+stroke.Color = mainColor
+stroke.Transparency = 0.3
 
 local Title = Instance.new("TextLabel")
 Title.Parent = Phone
@@ -42,14 +45,12 @@ Title.Position = UDim2.new(0, 10, 0, 10)
 Title.BackgroundTransparency = 1
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
-Title.TextColor3 = Color3.fromRGB(255, 105, 180)
-Title.Text = "💫 WATAX MENU"
+Title.TextColor3 = lightPink
+Title.Text = "👑 KING MORRIS"
 Title.TextXAlignment = Enum.TextXAlignment.Center
 
--- URL Universal Script
 local UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua"
 
--- Map List dengan mapKey yang sesuai
 local mapList = {
     {text="Mount Atin", mapKey="m1"},
     {text="Mount Yahayuk", mapKey="m2"},
@@ -86,8 +87,8 @@ local Scroll = Instance.new("ScrollingFrame")
 Scroll.Parent = Phone
 Scroll.Size = UDim2.new(1, -20, 1, -60)
 Scroll.Position = UDim2.new(0, 10, 0, 50)
-Scroll.BackgroundColor3 = Color3.fromRGB(40, 25, 60)
-Scroll.BackgroundTransparency = 0.5
+Scroll.BackgroundColor3 = Color3.fromRGB(30, 10, 25)
+Scroll.BackgroundTransparency = 0.4
 Scroll.BorderSizePixel = 0
 Scroll.ScrollBarThickness = 6
 Scroll.ScrollBarImageColor3 = mainColor
@@ -98,18 +99,17 @@ local Layout = Instance.new("UIListLayout", Scroll)
 Layout.Padding = UDim.new(0, 5)
 Layout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- Buat tombol untuk setiap Mount
 for i, info in ipairs(mapList) do
     local b = Instance.new("TextButton")
     b.Name = "Btn" .. i
     b.Parent = Scroll
     b.Size = UDim2.new(1, -12, 0, 35)
-    b.BackgroundColor3 = Color3.fromRGB(60, 40, 100)
+    b.BackgroundColor3 = darkPink
     b.BackgroundTransparency = 0.3
     b.BorderSizePixel = 0
     b.Font = Enum.Font.GothamBold
     b.TextSize = 13
-    b.TextColor3 = Color3.fromRGB(200, 200, 255)
+    b.TextColor3 = Color3.fromRGB(255, 200, 220)
     b.Text = info.text
     b.AutoButtonColor = false
     
@@ -117,25 +117,25 @@ for i, info in ipairs(mapList) do
     corner.CornerRadius = UDim.new(0, 10)
     
     local s = Instance.new("UIStroke", b)
-    s.Color = Color3.fromRGB(150, 100, 200)
+    s.Color = mainColor
     s.Thickness = 2
     s.Transparency = 0.5
 
     b.MouseEnter:Connect(function() 
         tween(s, {Transparency = 0.1, Thickness = 3}, 0.15)
-        tween(b, {BackgroundColor3 = Color3.fromRGB(150, 100, 200), BackgroundTransparency = 0.1}, 0.2)
+        tween(b, {BackgroundColor3 = mainColor, BackgroundTransparency = 0.1}, 0.2)
     end)
+    
     b.MouseLeave:Connect(function() 
         tween(s, {Transparency = 0.5, Thickness = 2}, 0.2)
-        tween(b, {BackgroundColor3 = Color3.fromRGB(60, 40, 100), BackgroundTransparency = 0.3}, 0.25)
+        tween(b, {BackgroundColor3 = darkPink, BackgroundTransparency = 0.3}, 0.25)
     end)
     
     b.MouseButton1Click:Connect(function()
         local originalText = b.Text
         b.Text = "⏳ Loading..."
         
-        -- Set parameter map sebelum load universal script
-        _G.WataXSelectedMap = info.mapKey
+        _G.KingMorrisSelectedMap = info.mapKey
         
         local ok, err = pcall(function()
             local code = game:HttpGet(UNIVERSAL_SCRIPT)
@@ -143,20 +143,18 @@ for i, info in ipairs(mapList) do
         end)
         
         if ok then
-            print("[WataX Menu] Successfully loaded: " .. info.text)
-            -- Hapus menu setelah berhasil load
+            print("[King Morris] Successfully loaded: " .. info.text)
             task.wait(0.5)
             ScreenGui:Destroy()
         else 
             b.Text = "❌ Error"
-            warn("[WataX Menu] Error loading:", err)
-            _G.WataXSelectedMap = nil
+            warn("[King Morris] Error loading:", err)
+            _G.KingMorrisSelectedMap = nil
             task.wait(2)
             b.Text = originalText
         end
     end)
 end
 
--- Update canvas size
 task.wait(0.1)
 Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
