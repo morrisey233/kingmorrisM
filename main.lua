@@ -6,9 +6,10 @@ local Players = game:GetService("Players")
 
 -- Konfigurasi
 local CONFIG = {
-    WHITELIST_ENABLED = false,
+    WHITELIST_ENABLED = true,
     ALLOWED_USERS = {
-        "MORRISRESTO", -- Ganti dengan username Roblox Anda
+        "MORRISRESTO", -- Username Roblox Anda
+        "morrisey233", -- Backup username
         -- Tambahkan user lain jika perlu
     },
     HWID_CHECK = true,
@@ -28,11 +29,19 @@ local function checkWhitelist()
     end
     
     local playerName = Players.LocalPlayer.Name
+    local playerDisplayName = Players.LocalPlayer.DisplayName
+    
+    -- Debug info
+    print("🔍 Checking player: " .. playerName)
+    print("🔍 Display name: " .. playerDisplayName)
+    
     for _, allowedUser in ipairs(CONFIG.ALLOWED_USERS) do
-        if playerName == allowedUser then
+        if playerName == allowedUser or playerDisplayName == allowedUser then
             return true
         end
     end
+    
+    print("❌ Player not in whitelist!")
     return false
 end
 
@@ -112,12 +121,30 @@ local function initialize()
     end
     print("✅ Protection check passed")
     
-    -- Load scripts
+    -- Tunggu character dan GUI siap
+    print("⏳ Waiting for character...")
+    local player = Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid", 10)
+    
+    -- Tunggu PlayerGui siap
+    local playerGui = player:WaitForChild("PlayerGui", 10)
+    if not playerGui then
+        warn("⚠️ PlayerGui not found!")
+        return
+    end
+    
+    print("✅ Character and GUI ready")
+    
+    -- Load scripts dengan delay
     print("📂 Loading scripts...")
     
-    -- Coba load menu.lua
+    -- Load menu.lua
     local menuSuccess = pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/morrisey233/YourRepo/main/menu.lua"))()
+        print("📥 Loading menu.lua...")
+        local menuScript = game:HttpGet("https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/menu.lua")
+        wait(0.5) -- Delay sebelum execute
+        loadstring(menuScript)()
     end)
     
     if menuSuccess then
@@ -126,9 +153,14 @@ local function initialize()
         warn("⚠️ Failed to load menu.lua")
     end
     
-    -- Coba load universal.lua
+    wait(1) -- Delay antar script
+    
+    -- Load universal.lua
     local universalSuccess = pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/morrisey233/YourRepo/main/universal.lua"))()
+        print("📥 Loading universal.lua...")
+        local universalScript = game:HttpGet("https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua")
+        wait(0.5) -- Delay sebelum execute
+        loadstring(universalScript)()
     end)
     
     if universalSuccess then
@@ -157,7 +189,4 @@ safeRun()
 Players.LocalPlayer.AncestryChanged:Connect(function()
     -- Hapus jejak
     print("🧹 Cleaning up...")
-
 end)
-
-
