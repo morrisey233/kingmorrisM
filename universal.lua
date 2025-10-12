@@ -1,55 +1,39 @@
--- ========================================
--- WATAX UNIVERSAL.LUA - FIXED COMPLETE
--- Auto-detect route berdasarkan pilihan menu
--- ========================================
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local hrp
 
--- MAP ROUTE DATABASE - SEMUA 29 MAPS
 local MAP_ROUTES = {
     m1 = {
         name = "Mount Atin",
         maxSpeed = 6,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/10.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/10.lua"}
     },
     m2 = {
         name = "Mount Yahayuk",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/21.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/21.lua"}
     },
     m12 = {
         name = "Mount Kalista",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/120.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/120.lua"}
     },
     m3 = {
         name = "Mount Daun",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/30.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/30.lua"}
     },
     m4 = {
         name = "Mount Arunika",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/40.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/40.lua"}
     },
     m6 = {
         name = "Mount Lembayana",
@@ -64,204 +48,153 @@ local MAP_ROUTES = {
         name = "Mount YNTKTS",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/80.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/80.lua"}
     },
     m7 = {
         name = "Mount Sakahayang",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/70.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/70.lua"}
     },
     m9 = {
         name = "Mount Hana",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/90.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/90.lua"}
     },
     m10 = {
         name = "Mount Stecu",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/100.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/100.lua"}
     },
     m11 = {
         name = "Mount Ckptw",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/110.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/110.lua"}
     },
     m5 = {
         name = "Mount Ravika",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/50.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/50.lua"}
     },
     m14 = {
         name = "Antartika Normal",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/140.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/140.lua"}
     },
     m15 = {
         name = "Mount Salvatore",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/150.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/150.lua"}
     },
     m16 = {
         name = "Mount Kirey",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/160.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/160.lua"}
     },
     m17 = {
         name = "Mount Pargoy",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/170.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/170.lua"}
     },
     m13 = {
         name = "Ekspedisi Kaliya",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/130.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/130.lua"}
     },
     m18 = {
         name = "Mount Forever",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/180.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/180.lua"}
     },
     m19 = {
         name = "Mount Mono",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/190.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/190.lua"}
     },
     m20 = {
         name = "Mount Yareuu",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/200.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/200.lua"}
     },
     m21 = {
         name = "Mount Serenity",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/210.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/210.lua"}
     },
     m22 = {
         name = "Mount Pedaunan",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/220.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/220.lua"}
     },
     m23 = {
         name = "Mount Pengangguran",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/230.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/230.lua"}
     },
     m24 = {
         name = "Mount Bingung",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/240.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/240.lua"}
     },
     m25 = {
         name = "Mount Kawaii",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/250.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/250.lua"}
     },
     m26 = {
         name = "Mount Runia",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/260.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/260.lua"}
     },
     m27 = {
         name = "Mount Swiss",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/270.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/270.lua"}
     },
     m28 = {
         name = "Mount Aneh",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/280.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/280.lua"}
     },
     m29 = {
         name = "Mount Lirae",
         maxSpeed = 3,
         frameTime = 1/30,
-        routes = {
-            "https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/290.lua"
-        }
+        routes = {"https://raw.githubusercontent.com/WataXScAja/WataXScIni/refs/heads/main/290.lua"}
     }
 }
 
--- AUTO DETECT MAP dari menu
-local selectedMapKey = _G.WataXSelectedMap or "m1"
+local selectedMapKey = _G.KingMorrisSelectedMap or "m1"
 local mapConfig = MAP_ROUTES[selectedMapKey]
 
 if not mapConfig then
-    warn("[WataX] ❌ Invalid map key: " .. tostring(selectedMapKey))
-    warn("[WataX] Defaulting to Mount Atin (m1)")
+    warn("[King Morris] Invalid map key: " .. tostring(selectedMapKey))
     selectedMapKey = "m1"
     mapConfig = MAP_ROUTES["m1"]
 end
 
-print("[WataX] ========================================")
-print("[WataX] 🗺️ Selected Map: " .. mapConfig.name)
-print("[WataX] ========================================")
+print("[King Morris] Selected Map: " .. mapConfig.name)
 
--- Variables
 local routes = {}
 local animConn
 local isMoving = false
@@ -272,12 +205,10 @@ local currentMaxSpeed = mapConfig.maxSpeed
 local isRunning = false
 local toggleBtn
 
--- Tween Helper
 local function tween(obj, props, dur)
     TweenService:Create(obj, TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play()
 end
 
--- Load Route from URL
 local function loadRoute(url)
     local success, result = pcall(function()
         local httpResult = game:HttpGet(url)
@@ -287,16 +218,13 @@ local function loadRoute(url)
     if success and typeof(result) == "table" and #result > 0 then
         return result
     else
-        warn("[WataX] ❌ Failed to load route from: " .. url)
-        if not success then
-            warn("[WataX] Error: " .. tostring(result))
-        end
+        warn("[King Morris] Failed to load route from: " .. url)
         return nil
     end
 end
 
--- Adjust Route Height
 local DEFAULT_HEIGHT = 2.9
+
 local function getCurrentHeight()
     local char = player.Character or player.CharacterAdded:Wait()
     local humanoid = char:WaitForChild("Humanoid")
@@ -313,35 +241,23 @@ local function adjustRoute(frames)
     return adjusted
 end
 
--- Load all routes for selected map
 local function loadAllRoutes()
     routes = {}
-    print("[WataX] 📥 Loading routes for: " .. mapConfig.name)
+    print("[King Morris] Loading routes for: " .. mapConfig.name)
     
     for i, link in ipairs(mapConfig.routes) do
-        print("[WataX] 🔗 Fetching route " .. i .. "...")
-        
         local mapData = loadRoute(link)
         
         if mapData and #mapData > 0 then
             local adjustedData = adjustRoute(mapData)
             table.insert(routes, {"Route " .. i, adjustedData})
-            print("[WataX] ✅ Route " .. i .. " loaded successfully (" .. #mapData .. " frames)")
-        else
-            warn("[WataX] ❌ Route " .. i .. " failed to load")
+            print("[King Morris] Route " .. i .. " loaded (" .. #mapData .. " frames)")
         end
     end
     
-    if #routes > 0 then
-        print("[WataX] 🎉 Total routes loaded: " .. #routes)
-        return true
-    else
-        warn("[WataX] ❌ No routes could be loaded!")
-        return false
-    end
+    return #routes > 0
 end
 
--- HRP Management
 local function refreshHRP(char)
     if not char then char = player.Character or player.CharacterAdded:Wait() end
     hrp = char:WaitForChild("HumanoidRootPart")
@@ -350,7 +266,6 @@ end
 player.CharacterAdded:Connect(refreshHRP)
 if player.Character then refreshHRP(player.Character) end
 
--- Movement Setup
 local function setupMovement(char)
     task.spawn(function()
         if not char then
@@ -361,13 +276,12 @@ local function setupMovement(char)
         if not humanoid or not root then return end
 
         humanoid.Died:Connect(function()
-            print("[WataX] 💀 Character died, stopping replay...")
             isReplayRunning = false
             stopMovement()
             isRunning = false
             if toggleBtn and toggleBtn.Parent then
                 toggleBtn.Text = "▶ Start"
-                tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(70, 200, 120)}, 0.2)
+                tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(200, 50, 100)}, 0.2)
             end
         end)
 
@@ -424,15 +338,12 @@ end
 
 local function startMovement() 
     isMoving = true 
-    print("[WataX] ▶️ Movement started")
 end
 
 local function stopMovement() 
     isMoving = false 
-    print("[WataX] ⏸️ Movement stopped")
 end
 
--- Route Navigation
 local function getNearestRoute()
     local nearestIdx, dist = 1, math.huge
     if hrp then
@@ -481,10 +392,7 @@ local function lerpCF(fromCF, toCF)
 end
 
 local function runRoute()
-    if #routes == 0 then
-        warn("[WataX] ❌ No routes loaded!")
-        return
-    end
+    if #routes == 0 then return end
     if not hrp then refreshHRP() end
     
     isReplayRunning = true
@@ -495,23 +403,14 @@ local function runRoute()
     
     if #frames < 2 then
         isReplayRunning = false
-        warn("[WataX] ❌ Not enough frames in route!")
         return
     end
     
     local startIdx = getNearestFrameIndex(frames)
-    print("[WataX] 🏃 Starting from frame " .. startIdx .. "/" .. #frames .. " (Route " .. idx .. ")")
     
     for i = startIdx, #frames - 1 do
-        if not isReplayRunning then 
-            print("[WataX] ⏹️ Route stopped by user")
-            break 
-        end
+        if not isReplayRunning then break end
         lerpCF(frames[i], frames[i + 1])
-    end
-    
-    if isReplayRunning then
-        print("[WataX] ✅ Route completed!")
     end
     
     isReplayRunning = false
@@ -523,33 +422,33 @@ local function stopRoute()
     stopMovement()
 end
 
--- ========================================
--- UI CREATION
--- ========================================
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "WataXUniversalUI"
+screenGui.Name = "KingMorrisUniversalUI"
 screenGui.IgnoreGuiInset = true
 screenGui.ResetOnSpawn = false
 screenGui.Parent = game.CoreGui
 
--- Main Frame
+local mainColor = Color3.fromRGB(200, 50, 100)
+local darkPink = Color3.fromRGB(150, 30, 80)
+local lightPink = Color3.fromRGB(255, 120, 170)
+local bgColor = Color3.fromRGB(40, 15, 30)
+
 local frame = Instance.new("Frame")
 frame.Name = "ControlPanel"
 frame.Size = UDim2.new(0, 200, 0, 180)
 frame.Position = UDim2.new(0.05, 0, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(50, 30, 70)
-frame.BackgroundTransparency = 0.3
+frame.BackgroundColor3 = bgColor
+frame.BackgroundTransparency = 0.2
 frame.Active = true
 frame.Draggable = true
 frame.Parent = screenGui
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 16)
 
 local glow = Instance.new("UIStroke", frame)
-glow.Color = Color3.fromRGB(180, 120, 255)
+glow.Color = mainColor
 glow.Thickness = 2
-glow.Transparency = 0.4
+glow.Transparency = 0.3
 
--- Title (Map Name)
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(0.85, 0, 0, 30)
 title.Position = UDim2.new(0.075, 0, 0, 8)
@@ -557,102 +456,96 @@ title.Text = mapConfig.name
 title.Font = Enum.Font.GothamBold
 title.TextSize = 14
 title.BackgroundTransparency = 0.3
-title.BackgroundColor3 = Color3.fromRGB(70, 40, 120)
+title.BackgroundColor3 = darkPink
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", title).CornerRadius = UDim.new(0, 10)
 
--- Rainbow effect
 local hue = 0
 RunService.RenderStepped:Connect(function()
     hue = (hue + 0.5) % 360
-    title.TextColor3 = Color3.fromHSV(hue / 360, 1, 1)
+    title.TextColor3 = Color3.fromHSV(hue / 360, 0.7, 1)
 end)
 
--- Close Button
 local closeBtn = Instance.new("TextButton", frame)
 closeBtn.Size = UDim2.new(0, 28, 0, 28)
 closeBtn.Position = UDim2.new(0.86, 0, 0, 9)
 closeBtn.Text = "✖"
 closeBtn.Font = Enum.Font.GothamBold
 closeBtn.TextSize = 16
-closeBtn.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
+closeBtn.BackgroundColor3 = Color3.fromRGB(180, 40, 80)
 closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 8)
 
 local closeGlow = Instance.new("UIStroke", closeBtn)
-closeGlow.Color = Color3.fromRGB(255, 0, 100)
+closeGlow.Color = mainColor
 closeGlow.Thickness = 2
-closeGlow.Transparency = 0.6
+closeGlow.Transparency = 0.5
 
 closeBtn.MouseEnter:Connect(function()
     tween(closeGlow, {Transparency = 0.1, Thickness = 4}, 0.2)
 end)
 closeBtn.MouseLeave:Connect(function()
-    tween(closeGlow, {Transparency = 0.6, Thickness = 2}, 0.2)
+    tween(closeGlow, {Transparency = 0.5, Thickness = 2}, 0.2)
 end)
 closeBtn.MouseButton1Click:Connect(function()
     stopRoute()
     screenGui:Destroy()
-    print("[WataX] 🚪 UI closed")
 end)
 
--- Start/Stop Button
 toggleBtn = Instance.new("TextButton", frame)
 toggleBtn.Size = UDim2.new(0.85, 0, 0, 45)
 toggleBtn.Position = UDim2.new(0.075, 0, 0, 50)
 toggleBtn.Text = "▶ Start"
 toggleBtn.Font = Enum.Font.GothamBold
 toggleBtn.TextSize = 18
-toggleBtn.BackgroundColor3 = Color3.fromRGB(70, 200, 120)
-toggleBtn.BackgroundTransparency = 0.3
+toggleBtn.BackgroundColor3 = mainColor
+toggleBtn.BackgroundTransparency = 0.2
 toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggleBtn.AutoButtonColor = false
 Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 12)
 
 local toggleGlow = Instance.new("UIStroke", toggleBtn)
-toggleGlow.Color = Color3.fromRGB(0, 255, 255)
+toggleGlow.Color = lightPink
 toggleGlow.Thickness = 2
-toggleGlow.Transparency = 0.5
+toggleGlow.Transparency = 0.4
 
 toggleBtn.MouseEnter:Connect(function()
     tween(toggleGlow, {Transparency = 0.1, Thickness = 4}, 0.2)
 end)
 toggleBtn.MouseLeave:Connect(function()
-    tween(toggleGlow, {Transparency = 0.5, Thickness = 2}, 0.2)
+    tween(toggleGlow, {Transparency = 0.4, Thickness = 2}, 0.2)
 end)
 
 toggleBtn.MouseButton1Click:Connect(function()
     if not isRunning then
         isRunning = true
         toggleBtn.Text = "■ Stop"
-        tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(200, 70, 70)}, 0.2)
+        tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(180, 40, 80)}, 0.2)
         task.spawn(runRoute)
     else
         isRunning = false
         toggleBtn.Text = "▶ Start"
-        tween(toggleBtn, {BackgroundColor3 = Color3.fromRGB(70, 200, 120)}, 0.2)
+        tween(toggleBtn, {BackgroundColor3 = mainColor}, 0.2)
         stopRoute()
     end
 end)
 
--- Speed Label
 local speedLabel = Instance.new("TextLabel", frame)
 speedLabel.Size = UDim2.new(0.35, 0, 0, 35)
 speedLabel.Position = UDim2.new(0.325, 0, 0, 110)
 speedLabel.BackgroundTransparency = 1
-speedLabel.TextColor3 = Color3.fromRGB(180, 180, 255)
+speedLabel.TextColor3 = lightPink
 speedLabel.Font = Enum.Font.GothamBold
 speedLabel.TextSize = 18
 speedLabel.Text = playbackRate .. "x"
 
--- Speed Down Button
 local speedDown = Instance.new("TextButton", frame)
 speedDown.Size = UDim2.new(0.22, 0, 0, 35)
 speedDown.Position = UDim2.new(0.075, 0, 0, 110)
 speedDown.Text = "-"
 speedDown.Font = Enum.Font.GothamBold
 speedDown.TextSize = 20
-speedDown.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+speedDown.BackgroundColor3 = darkPink
 speedDown.BackgroundTransparency = 0.3
 speedDown.TextColor3 = Color3.fromRGB(255, 255, 255)
 speedDown.AutoButtonColor = false
@@ -661,17 +554,15 @@ Instance.new("UICorner", speedDown).CornerRadius = UDim.new(0, 8)
 speedDown.MouseButton1Click:Connect(function()
     playbackRate = math.max(0.25, playbackRate - 0.25)
     speedLabel.Text = playbackRate .. "x"
-    print("[WataX] ⚡ Speed: " .. playbackRate .. "x")
 end)
 
--- Speed Up Button
 local speedUp = Instance.new("TextButton", frame)
 speedUp.Size = UDim2.new(0.22, 0, 0, 35)
 speedUp.Position = UDim2.new(0.705, 0, 0, 110)
 speedUp.Text = "+"
 speedUp.Font = Enum.Font.GothamBold
 speedUp.TextSize = 20
-speedUp.BackgroundColor3 = Color3.fromRGB(100, 100, 150)
+speedUp.BackgroundColor3 = mainColor
 speedUp.BackgroundTransparency = 0.3
 speedUp.TextColor3 = Color3.fromRGB(255, 255, 255)
 speedUp.AutoButtonColor = false
@@ -680,38 +571,28 @@ Instance.new("UICorner", speedUp).CornerRadius = UDim.new(0, 8)
 speedUp.MouseButton1Click:Connect(function()
     playbackRate = math.min(currentMaxSpeed, playbackRate + 0.25)
     speedLabel.Text = playbackRate .. "x"
-    print("[WataX] ⚡ Speed: " .. playbackRate .. "x")
 end)
 
--- Info Label
 local infoLabel = Instance.new("TextLabel", frame)
 infoLabel.Size = UDim2.new(0.85, 0, 0, 20)
 infoLabel.Position = UDim2.new(0.075, 0, 0, 155)
 infoLabel.BackgroundTransparency = 1
-infoLabel.TextColor3 = Color3.fromRGB(150, 150, 200)
+infoLabel.TextColor3 = lightPink
 infoLabel.Font = Enum.Font.Gotham
 infoLabel.TextSize = 9
 infoLabel.Text = "Loading routes..."
 infoLabel.TextXAlignment = Enum.TextXAlignment.Center
 
--- Load routes dan show UI
-print("[WataX] 📦 Loading routes...")
 local loadSuccess = loadAllRoutes()
 
 if loadSuccess then
-    print("[WataX] 🎮 UI loaded successfully!")
-    print("[WataX] ✨ Press Start to begin auto-walk")
-    infoLabel.Text = "Routes: " .. #routes .. " | Max Speed: " .. currentMaxSpeed .. "x"
+    infoLabel.Text = "Routes: " .. #routes .. " | Max: " .. currentMaxSpeed .. "x"
 else
-    warn("[WataX] ❌ Failed to load routes!")
     infoLabel.Text = "❌ Failed to load routes"
     infoLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
     toggleBtn.Text = "❌ No Routes"
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 end
 
--- Cleanup _G variable
-_G.WataXSelectedMap = nil
-print("[WataX] ========================================")
-print("[WataX] Ready! Map: " .. mapConfig.name)
-print("[WataX] ========================================")
+_G.KingMorrisSelectedMap = nil
+print("[King Morris] Ready! Map: " .. mapConfig.name)
