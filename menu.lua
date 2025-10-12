@@ -1,7 +1,7 @@
 -- ============================================
--- KING MORRIS MENU UI - FIXED INTEGRATION
+-- KING MORRIS MENU UI - COMPLETE VERSION
 -- Auto AFK & Map Selector for Roblox
--- Version: 4.1 Fixed
+-- Version: 5.0 Ultimate
 -- ============================================
 
 local Players = game:GetService("Players")
@@ -12,221 +12,203 @@ local CoreGui = game:GetService("CoreGui")
 local player = Players.LocalPlayer
 local gui = player:WaitForChild("PlayerGui")
 
--- Cleanup existing UIs
-if gui:FindFirstChild("KingMorrisMenuUI") then 
-    gui.KingMorrisMenuUI:Destroy() 
-end
-if CoreGui:FindFirstChild("WataX_AutoUI") then
-    CoreGui.WataX_AutoUI:Destroy()
-end
-
--- ============================================
--- CONFIGURATION
--- ============================================
+pcall(function() if gui:FindFirstChild("KingMorrisMenuUI") then gui.KingMorrisMenuUI:Destroy() end end)
+pcall(function() if CoreGui:FindFirstChild("KingMorrisAutoUI") then CoreGui.KingMorrisAutoUI:Destroy() end end)
 
 local CONFIG = {
-    -- URLs
     UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua",
     PRIVATE_SERVER_SCRIPT = "https://pastefy.app/Si31pCY9/raw",
-    
-    -- Brand Colors
     MAIN_COLOR = Color3.fromRGB(200, 50, 100),
     DARK_PINK = Color3.fromRGB(150, 30, 80),
     LIGHT_PINK = Color3.fromRGB(255, 120, 170),
     BG_COLOR = Color3.fromRGB(40, 15, 30),
-    ACCENT_PINK = Color3.fromRGB(255, 100, 150),
-    
-    -- Auto AFK Settings
     AUTO_START = true,
     AUTO_RESPAWN = true,
     STOP_DELAY = 30,
     RESPAWN_DELAY = 20,
-    POST_RESPAWN_DELAY = 8,
+    POST_RESPAWN_DELAY = 10,
     MOVE_THRESHOLD = 0.1,
     RETRY_INTERVAL = 15,
-    COOLDOWN_AFTER_RESPAWN = 45,
+    COOLDOWN_AFTER_RESPAWN = 50,
     MAX_BUTTON_WAIT = 60,
-    BUTTON_SEARCH_RETRY = 15,
 }
 
 local MAP_LIST = {
-    {text = "Mount Atin", mapKey = "m1"},
-    {text = "Mount Yahayuk", mapKey = "m2"},
-    {text = "Mount Kalista", mapKey = "m12"},
-    {text = "Mount Daun", mapKey = "m3"},
-    {text = "Mount Arunika", mapKey = "m4"},
-    {text = "Mount Lembayana", mapKey = "m6"},
-    {text = "Mount YNTKTS", mapKey = "m8"},
-    {text = "Mount Sakahayang", mapKey = "m7"},
-    {text = "Mount Hana", mapKey = "m9"},
-    {text = "Mount Stecu", mapKey = "m10"},
-    {text = "Mount Ckptw", mapKey = "m11"},
-    {text = "Mount Ravika", mapKey = "m5"},
-    {text = "Antartika Normal", mapKey = "m14"},
-    {text = "Mount Salvatore", mapKey = "m15"},
-    {text = "Mount Kirey", mapKey = "m16"},
-    {text = "Mount Pargoy", mapKey = "m17"},
-    {text = "Ekspedisi Kaliya", mapKey = "m13"},
-    {text = "Mount Forever", mapKey = "m18"},
-    {text = "Mount Mono", mapKey = "m19"},
-    {text = "Mount Yareuu", mapKey = "m20"},
-    {text = "Mount Serenity", mapKey = "m21"},
-    {text = "Mount Pedaunan", mapKey = "m22"},
-    {text = "Mount Pengangguran", mapKey = "m23"},
-    {text = "Mount Bingung", mapKey = "m24"},
-    {text = "Mount Kawaii", mapKey = "m25"},
-    {text = "Mount Runia", mapKey = "m26"},
-    {text = "Mount Swiss", mapKey = "m27"},
-    {text = "Mount Aneh", mapKey = "m28"},
-    {text = "Mount Lirae", mapKey = "m29"},
+    {text = "Mount Atin", mapKey = "m1"}, {text = "Mount Yahayuk", mapKey = "m2"}, {text = "Mount Kalista", mapKey = "m12"},
+    {text = "Mount Daun", mapKey = "m3"}, {text = "Mount Arunika", mapKey = "m4"}, {text = "Mount Lembayana", mapKey = "m6"},
+    {text = "Mount YNTKTS", mapKey = "m8"}, {text = "Mount Sakahayang", mapKey = "m7"}, {text = "Mount Hana", mapKey = "m9"},
+    {text = "Mount Stecu", mapKey = "m10"}, {text = "Mount Ckptw", mapKey = "m11"}, {text = "Mount Ravika", mapKey = "m5"},
+    {text = "Antartika Normal", mapKey = "m14"}, {text = "Mount Salvatore", mapKey = "m15"}, {text = "Mount Kirey", mapKey = "m16"},
+    {text = "Mount Pargoy", mapKey = "m17"}, {text = "Ekspedisi Kaliya", mapKey = "m13"}, {text = "Mount Forever", mapKey = "m18"},
+    {text = "Mount Mono", mapKey = "m19"}, {text = "Mount Yareuu", mapKey = "m20"}, {text = "Mount Serenity", mapKey = "m21"},
+    {text = "Mount Pedaunan", mapKey = "m22"}, {text = "Mount Pengangguran", mapKey = "m23"}, {text = "Mount Bingung", mapKey = "m24"},
+    {text = "Mount Kawaii", mapKey = "m25"}, {text = "Mount Runia", mapKey = "m26"}, {text = "Mount Swiss", mapKey = "m27"},
+    {text = "Mount Aneh", mapKey = "m28"}, {text = "Mount Lirae", mapKey = "m29"},
 }
 
--- Global State
 _G.KingMorrisAutoAFKEnabled = false
 _G.KingMorrisPrivateServerEnabled = false
-_G.WataXAutoAFKRunning = false
+_G.KingMorrisAutoAFKRunning = false
 _G.KingMorrisToggleButton = nil
-
--- ============================================
--- UTILITY FUNCTIONS
--- ============================================
 
 local function tween(obj, props, dur)
     if not obj or not obj.Parent then return end
-    TweenService:Create(
-        obj, 
-        TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), 
-        props
-    ):Play()
+    pcall(function() TweenService:Create(obj, TweenInfo.new(dur or 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props):Play() end)
 end
 
--- ============================================
--- AUTO AFK SYSTEM (IMPROVED)
--- ============================================
-
 local AutoAFKSystem = {
-    running = false,
-    hrp = nil,
-    toggleBtn = nil,
-    lastPos = nil,
-    stillTime = 0,
-    totalDist = 0,
-    lastAutoStart = 0,
-    justRestarted = false,
-    afterRespawn = false,
-    buttonConnection = nil
+    running = false, hrp = nil, toggleBtn = nil, lastPos = nil, stillTime = 0, totalDist = 0,
+    lastAutoStart = 0, justRestarted = false, afterRespawn = false,
 }
 
 function AutoAFKSystem:clickButton(button)
-    if not button or not button.Parent then 
-        warn("[Auto AFK] ✗ Button tidak valid")
-        return false
-    end
+    if not button or not button.Parent then warn("[King Morris Auto AFK] ✗ Button tidak valid") return false end
+    print("[King Morris Auto AFK] 🔄 Mencoba klik button...")
+    local success, method = false, "none"
     
-    local success = false
-    
-    -- Method 1: firesignal
     pcall(function()
-        if firesignal and button.MouseButton1Click then
-            firesignal(button.MouseButton1Click)
-            success = true
-            print("[Auto AFK] ✓ Clicked (firesignal)")
+        for _, c in pairs(getconnections(button.MouseButton1Click)) do
+            if c.Function then
+                c.Function()
+                success, method = true, "getconnections"
+                break
+            end
         end
     end)
     
-    -- Method 2: getconnections
     if not success then
         pcall(function()
-            local connections = getconnections(button.MouseButton1Click)
-            if connections then
-                for _, c in ipairs(connections) do
-                    if c and type(c) == "table" and c.Function then
-                        pcall(function()
-                            c.Function()
-                            success = true
-                        end)
-                        if success then
-                            print("[Auto AFK] ✓ Clicked (getconnections)")
-                            break
-                        end
-                    end
+            firesignal(button.MouseButton1Click)
+            success, method = true, "firesignal"
+        end)
+    end
+    
+    if not success then
+        pcall(function()
+            for _, c in pairs(getconnections(button.MouseButton1Click)) do
+                c:Fire()
+                success, method = true, "Fire"
+                break
+            end
+        end)
+    end
+    
+    if not success then
+        pcall(function()
+            local vim = game:GetService("VirtualInputManager")
+            local pos, size = button.AbsolutePosition, button.AbsoluteSize
+            local x, y = pos.X + size.X/2, pos.Y + size.Y/2
+            vim:SendMouseButtonEvent(x, y, 0, true, game, 0)
+            task.wait(0.05)
+            vim:SendMouseButtonEvent(x, y, 0, false, game, 0)
+            success, method = true, "VirtualInput"
+        end)
+    end
+    
+    if not success then
+        pcall(function()
+            for _, c in pairs(getconnections(button.Activated)) do
+                if c.Function then
+                    c.Function()
+                    success, method = true, "Activated"
+                    break
                 end
             end
         end)
     end
     
-    -- Method 3: Virtual input
-    if not success then
-        pcall(function()
-            local VirtualInputManager = game:GetService("VirtualInputManager")
-            if VirtualInputManager then
-                local pos = button.AbsolutePosition
-                local size = button.AbsoluteSize
-                local centerX = pos.X + (size.X / 2)
-                local centerY = pos.Y + (size.Y / 2)
-                
-                VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, game, 0)
-                task.wait(0.05)
-                VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, game, 0)
-                success = true
-                print("[Auto AFK] ✓ Clicked (VirtualInput)")
-            end
-        end)
+    if success then
+        print("[King Morris Auto AFK] ✓ Button clicked! Method: " .. method)
+    else
+        warn("[King Morris Auto AFK] ✗ All click methods failed!")
     end
     
     return success
 end
 
+function AutoAFKSystem:forceToggleRoute(shouldStart)
+    print("[King Morris Auto AFK] 🔧 Force toggle:", shouldStart and "START" or "STOP")
+    
+    local success = pcall(function()
+        if _G.KingMorrisToggleFunction then
+            local currentlyRunning = false
+            if _G.KingMorrisIsRunning then
+                currentlyRunning = _G.KingMorrisIsRunning()
+            end
+            
+            if shouldStart and not currentlyRunning then
+                _G.KingMorrisToggleFunction()
+                print("[King Morris Auto AFK] ✓ Started via global function")
+                return true
+            elseif not shouldStart and currentlyRunning then
+                _G.KingMorrisToggleFunction()
+                print("[King Morris Auto AFK] ✓ Stopped via global function")
+                return true
+            else
+                print("[King Morris Auto AFK] ⚠️ Already in desired state")
+                return true
+            end
+        end
+    end)
+    
+    if success then return true end
+    
+    if self.toggleBtn and self.toggleBtn.Parent then
+        return self:clickButton(self.toggleBtn)
+    end
+    
+    return false
+end
+
 function AutoAFKSystem:getButtonText()
     if not self.toggleBtn or not self.toggleBtn.Parent then return "" end
-    local success, text = pcall(function()
-        return self.toggleBtn.Text:lower()
-    end)
-    return success and text or ""
+    local ok, text = pcall(function() return self.toggleBtn.Text:lower() end)
+    return ok and text or ""
 end
 
 function AutoAFKSystem:getHRP()
-    local char = player.Character or player.CharacterAdded:Wait()
-    return char:WaitForChild("HumanoidRootPart", 10)
+    local ok, result = pcall(function()
+        local char = player.Character or player.CharacterAdded:Wait()
+        return char:WaitForChild("HumanoidRootPart", 10)
+    end)
+    return ok and result or nil
 end
 
 function AutoAFKSystem:setStatus(text, color)
-    if _G.WataXStatus then
-        pcall(function()
-            _G.WataXStatus(text, color)
-        end)
-    end
+    pcall(function()
+        if _G.KingMorrisStatus then
+            _G.KingMorrisStatus(text, color)
+        end
+    end)
 end
 
 function AutoAFKSystem:waitForButton()
-    print("[Auto AFK] 🔍 Menunggu button dari universal.lua...")
+    print("[King Morris Auto AFK] 🔍 Waiting for button from universal.lua...")
     local startTime = tick()
     
     while not _G.KingMorrisToggleButton and (tick() - startTime) < CONFIG.MAX_BUTTON_WAIT and self.running do
         task.wait(0.5)
-        
         local elapsed = math.floor(tick() - startTime)
-        if elapsed % 10 == 0 then
-            print("[Auto AFK] Masih menunggu... (" .. elapsed .. "s)")
+        if elapsed % 10 == 0 and elapsed > 0 then
+            print("[King Morris Auto AFK] Still waiting... (" .. elapsed .. "s)")
             self:setStatus("🟡 Waiting Button " .. elapsed .. "s", Color3.fromRGB(255,255,100))
         end
     end
     
-    if _G.KingMorrisToggleButton then
+    if _G.KingMorrisToggleButton and _G.KingMorrisToggleButton.Parent then
         self.toggleBtn = _G.KingMorrisToggleButton
-        print("[Auto AFK] ✓ Button ditemukan!")
+        print("[King Morris Auto AFK] ✓ Button found!")
         return true
     else
-        warn("[Auto AFK] ✗ Button timeout setelah " .. CONFIG.MAX_BUTTON_WAIT .. "s")
+        warn("[King Morris Auto AFK] ✗ Button timeout after " .. CONFIG.MAX_BUTTON_WAIT .. "s")
         return false
     end
 end
 
 function AutoAFKSystem:respawnCharacter()
-    print("[Auto AFK] 🔄 Memulai respawn...")
+    print("[King Morris Auto AFK] 🔄 Initiating respawn...")
     self:setStatus("🔴 Respawning...", Color3.fromRGB(255,100,100))
     
-    -- Respawn character
     pcall(function()
         local char = player.Character
         if char and char:FindFirstChild("Humanoid") then
@@ -234,41 +216,31 @@ function AutoAFKSystem:respawnCharacter()
         end
     end)
     
-    -- Tunggu karakter baru
-    local newChar
-    local timeout = 30
-    local elapsed = 0
-    
-    local connection = player.CharacterAdded:Connect(function(char)
-        newChar = char
-    end)
+    local newChar, timeout, elapsed = nil, 30, 0
+    local conn = player.CharacterAdded:Connect(function(c) newChar = c end)
     
     while not newChar and elapsed < timeout do
         task.wait(0.5)
         elapsed = elapsed + 0.5
     end
     
-    connection:Disconnect()
+    pcall(function() conn:Disconnect() end)
     
     if not newChar then
-        warn("[Auto AFK] ✗ Respawn timeout")
+        warn("[King Morris Auto AFK] ✗ Respawn timeout")
         self.afterRespawn = false
         return
     end
     
-    -- Dapatkan HRP baru
-    local newHRP
-    local hrpAttempts = 0
-    while hrpAttempts < 10 and not newHRP do
+    local newHRP, attempts = nil, 0
+    while attempts < 10 and not newHRP do
         task.wait(0.5)
-        hrpAttempts = hrpAttempts + 1
-        pcall(function()
-            newHRP = newChar:FindFirstChild("HumanoidRootPart")
-        end)
+        attempts = attempts + 1
+        pcall(function() newHRP = newChar:FindFirstChild("HumanoidRootPart") end)
     end
     
     if not newHRP then
-        warn("[Auto AFK] ✗ Gagal mendapatkan HRP baru")
+        warn("[King Morris Auto AFK] ✗ Failed to get HRP")
         self.afterRespawn = false
         return
     end
@@ -276,17 +248,13 @@ function AutoAFKSystem:respawnCharacter()
     task.wait(CONFIG.POST_RESPAWN_DELAY)
     self.hrp = newHRP
     self.lastPos = self.hrp.Position
-    self.stillTime = 0
-    self.totalDist = 0
+    self.stillTime, self.totalDist = 0, 0
     
-    print("[Auto AFK] 🔍 Menunggu button kembali...")
+    print("[King Morris Auto AFK] 🔍 Waiting for button...")
     self:setStatus("🟡 Waiting Button...", Color3.fromRGB(255,255,100))
     
-    -- Tunggu button dari global
-    local buttonFound = self:waitForButton()
-    
-    if not buttonFound then
-        warn("[Auto AFK] ✗ Button hilang setelah respawn!")
+    if not self:waitForButton() then
+        warn("[King Morris Auto AFK] ✗ Button lost after respawn!")
         self:setStatus("❌ Button Lost", Color3.fromRGB(255,100,100))
         self.afterRespawn = false
         return
@@ -295,61 +263,57 @@ function AutoAFKSystem:respawnCharacter()
     task.wait(2)
     self.afterRespawn = true
     
-    -- Stop jika sedang running
     local text = self:getButtonText()
-    print("[Auto AFK] Status button:", text or "kosong")
+    print("[King Morris Auto AFK] Button state:", text or "empty")
     
     if text and text:find("stop") then
-        print("[Auto AFK] ⏸ Stopping sebelum restart...")
-        self:clickButton(self.toggleBtn)
+        print("[King Morris Auto AFK] ⏸ Stopping before restart...")
+        self:forceToggleRoute(false)
         task.wait(2)
     end
     
-    -- Verifikasi button lagi
     if not self.toggleBtn or not self.toggleBtn.Parent then
-        warn("[Auto AFK] ✗ Button hilang setelah stop")
-        buttonFound = self:waitForButton()
-        if not buttonFound then
+        warn("[King Morris Auto AFK] ✗ Button lost")
+        if not self:waitForButton() then
             self.afterRespawn = false
             return
         end
     end
     
-    -- Start route
     task.wait(1)
     text = self:getButtonText()
     
     if text and text:find("start") then
-        print("[Auto AFK] ▶ Memulai route...")
-        local started = self:clickButton(self.toggleBtn)
-        if started then
+        print("[King Morris Auto AFK] ▶ Starting route...")
+        if self:forceToggleRoute(true) then
             task.wait(2)
             self:setStatus("🟢 Auto Start Success", Color3.fromRGB(100,255,100))
-            print("[Auto AFK] ✓ Route dimulai!")
+            print("[King Morris Auto AFK] ✓ Route started!")
         else
-            warn("[Auto AFK] ✗ Gagal start")
+            warn("[King Morris Auto AFK] ✗ Failed to start")
             self:setStatus("⚠️ Start Failed", Color3.fromRGB(255,150,100))
         end
     else
-        warn("[Auto AFK] ✗ Status salah:", text or "nil")
+        warn("[King Morris Auto AFK] ✗ Wrong state:", text or "nil")
         self:setStatus("⚠️ Wrong State", Color3.fromRGB(255,200,100))
     end
     
-    -- Cooldown
     task.spawn(function()
         task.wait(CONFIG.COOLDOWN_AFTER_RESPAWN)
         self.afterRespawn = false
-        print("[Auto AFK] ✓ Cooldown selesai")
+        print("[King Morris Auto AFK] ✓ Cooldown finished")
     end)
 end
 
 function AutoAFKSystem:createStatusUI()
-    if CoreGui:FindFirstChild("WataX_AutoUI") then
-        CoreGui.WataX_AutoUI:Destroy()
-    end
+    pcall(function()
+        if CoreGui:FindFirstChild("KingMorrisAutoUI") then
+            CoreGui.KingMorrisAutoUI:Destroy()
+        end
+    end)
     
     local statusGui = Instance.new("ScreenGui")
-    statusGui.Name = "WataX_AutoUI"
+    statusGui.Name = "KingMorrisAutoUI"
     statusGui.Parent = CoreGui
 
     local frame = Instance.new("Frame")
@@ -364,16 +328,16 @@ function AutoAFKSystem:createStatusUI()
     frame.Parent = statusGui
 
     local glow = Instance.new("UIStroke", frame)
-    glow.Color = Color3.fromRGB(180, 120, 255)
+    glow.Color = Color3.fromRGB(200, 50, 100)
     glow.Thickness = 2
     glow.Transparency = 0.4
 
     local title = Instance.new("TextLabel", frame)
     title.Size = UDim2.new(1, 0, 0.45, 0)
     title.BackgroundTransparency = 1
-    title.Text = "⚙️ AutoAFK Status"
+    title.Text = "👑 King Morris Auto AFK"
     title.Font = Enum.Font.GothamBold
-    title.TextColor3 = Color3.fromRGB(180, 180, 255)
+    title.TextColor3 = Color3.fromRGB(255, 120, 170)
     title.TextScaled = true
 
     local statusLabel = Instance.new("TextLabel", frame)
@@ -385,73 +349,66 @@ function AutoAFKSystem:createStatusUI()
     statusLabel.Text = "🟡 Initializing..."
     statusLabel.TextColor3 = Color3.fromRGB(255, 255, 100)
 
-    -- Rainbow effect
     local hue = 0
-    local connection = RunService.RenderStepped:Connect(function()
+    local conn = RunService.RenderStepped:Connect(function()
         if not self.running or not statusGui.Parent then
-            connection:Disconnect()
+            pcall(function() conn:Disconnect() end)
             return
         end
         hue = (hue + 0.4) % 360
-        glow.Color = Color3.fromHSV(hue / 360, 0.8, 1)
+        pcall(function() glow.Color = Color3.fromHSV(hue / 360, 0.8, 1) end)
     end)
 
-    _G.WataXStatus = function(text, color)
-        if statusLabel and statusLabel.Parent then
-            pcall(function()
+    _G.KingMorrisStatus = function(text, color)
+        pcall(function()
+            if statusLabel and statusLabel.Parent then
                 statusLabel.Text = text
                 statusLabel.TextColor3 = color
-            end)
-        end
+            end
+        end)
     end
     
     return statusGui
 end
 
 function AutoAFKSystem:start()
-    if _G.WataXAutoAFKRunning then
-        print("[Auto AFK] ⚠️ Sudah berjalan!")
+    if _G.KingMorrisAutoAFKRunning then
+        print("[King Morris Auto AFK] ⚠️ Already running!")
         return
     end
     
-    _G.WataXAutoAFKRunning = true
+    _G.KingMorrisAutoAFKRunning = true
     self.running = true
     
-    print("[Auto AFK] ▶ Memulai sistem...")
+    print("[King Morris Auto AFK] ▶ Starting system...")
     
-    -- Buat UI
     self:createStatusUI()
-    self:setStatus("🟡 Mencari Button...", Color3.fromRGB(255,255,100))
+    self:setStatus("🟡 Searching...", Color3.fromRGB(255,255,100))
     
-    -- Dapatkan HRP
     self.hrp = self:getHRP()
     if not self.hrp then
-        warn("[Auto AFK] ✗ Gagal mendapatkan HRP")
+        warn("[King Morris Auto AFK] ✗ Failed to get HRP")
         self:setStatus("❌ HRP Not Found", Color3.fromRGB(255,100,100))
         self.running = false
-        _G.WataXAutoAFKRunning = false
+        _G.KingMorrisAutoAFKRunning = false
         return
     end
     
-    -- Tunggu button dari universal.lua
-    local buttonFound = self:waitForButton()
-    if not buttonFound then
-        warn("[Auto AFK] ✗ Button tidak ditemukan")
+    if not self:waitForButton() then
+        warn("[King Morris Auto AFK] ✗ Button not found")
         self:setStatus("❌ Button Not Found", Color3.fromRGB(255,100,100))
         self.running = false
-        _G.WataXAutoAFKRunning = false
+        _G.KingMorrisAutoAFKRunning = false
         return
     end
     
     self.lastPos = self.hrp.Position
     self:setStatus("🟢 Ready to Monitor", Color3.fromRGB(100,255,100))
-    print("[Auto AFK] ✓ Sistem siap!")
+    print("[King Morris Auto AFK] ✓ System ready!")
     
-    -- Main loop
     task.spawn(function()
-        while self.running and _G.WataXAutoAFKRunning do
+        while self.running and _G.KingMorrisAutoAFKRunning do
             pcall(function()
-                -- Verifikasi HRP
                 if not self.hrp or not self.hrp.Parent then
                     self.hrp = self:getHRP()
                     if self.hrp then
@@ -461,13 +418,12 @@ function AutoAFKSystem:start()
                     return
                 end
                 
-                -- Verifikasi button menggunakan global
                 if not self.toggleBtn or not self.toggleBtn.Parent then
                     if _G.KingMorrisToggleButton and _G.KingMorrisToggleButton.Parent then
                         self.toggleBtn = _G.KingMorrisToggleButton
-                        print("[Auto AFK] ✓ Button direstore dari global")
+                        print("[King Morris Auto AFK] ✓ Button restored from global")
                     else
-                        warn("[Auto AFK] Button hilang, mencari...")
+                        warn("[King Morris Auto AFK] Button lost, searching...")
                         self:waitForButton()
                         if not self.toggleBtn then
                             self:setStatus("❌ Button Lost", Color3.fromRGB(255,100,100))
@@ -477,7 +433,6 @@ function AutoAFKSystem:start()
                     end
                 end
 
-                -- Hitung movement
                 local currentPos = self.hrp.Position
                 local dist = (currentPos - self.lastPos).Magnitude
                 self.totalDist = self.totalDist + dist
@@ -490,47 +445,42 @@ function AutoAFKSystem:start()
                     self.justRestarted = false
                 end
 
-                -- Skip saat cooldown
                 if self.afterRespawn then
-                    self.stillTime = 0
-                    self.totalDist = 0
+                    self.stillTime, self.totalDist = 0, 0
                     return
                 end
 
-                -- Update status
                 if self.stillTime == 0 then
                     self:setStatus("🟢 Running", Color3.fromRGB(100,255,100))
                 elseif self.stillTime < CONFIG.RESPAWN_DELAY then
                     self:setStatus("🟡 Idle " .. self.stillTime .. "s", Color3.fromRGB(255,255,150))
                 end
 
-                -- Auto respawn
                 if CONFIG.AUTO_RESPAWN and self.stillTime >= CONFIG.RESPAWN_DELAY then
-                    print("[Auto AFK] ⚠️ Memicu respawn")
+                    print("[King Morris Auto AFK] ⚠️ Triggering respawn")
                     self:respawnCharacter()
                     self.stillTime, self.totalDist = 0, 0
                     self.justRestarted = false
                     return
                 end
 
-                -- Auto restart
                 local now = tick()
                 if CONFIG.AUTO_START and self.stillTime >= CONFIG.STOP_DELAY and 
                    self.totalDist < 0.5 and (now - self.lastAutoStart > CONFIG.RETRY_INTERVAL) and 
                    not self.justRestarted then
                     
-                    print("[Auto AFK] 🔄 Mencoba restart...")
-                    local text = self:getButtonText()
+                    print("[King Morris Auto AFK] 🔄 Attempting restart...")
                     self:setStatus("🔵 Restarting...", Color3.fromRGB(100,150,255))
 
+                    local text = self:getButtonText()
                     if text and text:find("stop") then
-                        self:clickButton(self.toggleBtn)
+                        self:forceToggleRoute(false)
                         task.wait(1)
                     end
                     
                     text = self:getButtonText()
                     if text and text:find("start") then
-                        if self:clickButton(self.toggleBtn) then
+                        if self:forceToggleRoute(true) then
                             self.lastAutoStart = now
                             self.justRestarted = true
                             self:setStatus("🟢 Running", Color3.fromRGB(100,255,100))
@@ -544,24 +494,22 @@ function AutoAFKSystem:start()
             task.wait(1)
         end
         
-        print("[Auto AFK] ⏹ Loop selesai")
+        print("[King Morris Auto AFK] ⏹ Loop ended")
     end)
 end
 
 function AutoAFKSystem:stop()
     self.running = false
-    _G.WataXAutoAFKRunning = false
+    _G.KingMorrisAutoAFKRunning = false
     
-    if CoreGui:FindFirstChild("WataX_AutoUI") then
-        CoreGui.WataX_AutoUI:Destroy()
-    end
+    pcall(function()
+        if CoreGui:FindFirstChild("KingMorrisAutoUI") then
+            CoreGui.KingMorrisAutoUI:Destroy()
+        end
+    end)
     
-    print("[Auto AFK] ⏹ Sistem dihentikan")
+    print("[King Morris Auto AFK] ⏹ System stopped")
 end
-
--- ============================================
--- MAIN UI CREATION
--- ============================================
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "KingMorrisMenuUI"
@@ -612,10 +560,6 @@ local Layout = Instance.new("UIListLayout", Scroll)
 Layout.Padding = UDim.new(0, 5)
 Layout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- ============================================
--- AUTO AFK BUTTON
--- ============================================
-
 local autoAfkBtn = Instance.new("TextButton")
 autoAfkBtn.Name = "AutoAFKBtn"
 autoAfkBtn.Parent = Scroll
@@ -652,34 +596,24 @@ end)
 
 autoAfkBtn.MouseButton1Click:Connect(function()
     if _G.KingMorrisAutoAFKEnabled then
-        -- DISABLE
         _G.KingMorrisAutoAFKEnabled = false
         AutoAFKSystem:stop()
-        
         autoAfkBtn.Text = "⚙️ AUTO AFK"
         autoAfkBtn.BackgroundColor3 = Color3.fromRGB(100, 50, 150)
         autoAfkBtn.BackgroundTransparency = 0.3
         afkStroke.Color = Color3.fromRGB(150, 100, 255)
         afkStroke.Transparency = 0.5
-        
         print("[King Morris] ⏹ Auto AFK DISABLED")
     else
-        -- ENABLE
         _G.KingMorrisAutoAFKEnabled = true
-        
         autoAfkBtn.Text = "✅ AUTO AFK ENABLED"
         autoAfkBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 100)
         autoAfkBtn.BackgroundTransparency = 0
         afkStroke.Color = Color3.fromRGB(100, 255, 150)
         afkStroke.Transparency = 0
-        
         print("[King Morris] ✓ Auto AFK ENABLED")
     end
 end)
-
--- ============================================
--- PRIVATE SERVER BUTTON
--- ============================================
 
 local privateServerBtn = Instance.new("TextButton")
 privateServerBtn.Name = "PrivateServerBtn"
@@ -722,12 +656,10 @@ privateServerBtn.MouseButton1Click:Connect(function()
         privateServerBtn.Text = "✅ PRIVATE SERVER ON"
     else
         privateServerBtn.Text = "⏳ Loading..."
-        
         task.spawn(function()
             local ok = pcall(function()
                 loadstring(game:HttpGet(CONFIG.PRIVATE_SERVER_SCRIPT))()
             end)
-            
             if ok then
                 _G.KingMorrisPrivateServerEnabled = true
                 privateServerBtn.Text = "✅ PRIVATE SERVER ON"
@@ -735,7 +667,6 @@ privateServerBtn.MouseButton1Click:Connect(function()
                 privateServerBtn.BackgroundTransparency = 0
                 psStroke.Color = Color3.fromRGB(100, 255, 150)
                 psStroke.Transparency = 0
-                
                 print("[King Morris] ✓ Private Server loaded!")
             else
                 privateServerBtn.Text = "❌ ERROR"
@@ -745,10 +676,6 @@ privateServerBtn.MouseButton1Click:Connect(function()
         end)
     end
 end)
-
--- ============================================
--- MAP BUTTONS
--- ============================================
 
 for i, info in ipairs(MAP_LIST) do
     local b = Instance.new("TextButton")
@@ -798,11 +725,10 @@ for i, info in ipairs(MAP_LIST) do
             if ok then
                 print("[King Morris] ✓ Successfully loaded: " .. info.text)
                 
-                -- Jika Auto AFK enabled, start monitoring setelah map load
                 if _G.KingMorrisAutoAFKEnabled then
-                    print("[King Morris] Auto AFK enabled, menunggu route UI...")
-                    task.wait(8) -- Beri waktu UI muncul dan stabil
-                    print("[King Morris] Memulai Auto AFK monitoring...")
+                    print("[King Morris] Auto AFK enabled, waiting for route UI...")
+                    task.wait(10)
+                    print("[King Morris] Starting Auto AFK monitoring...")
                     AutoAFKSystem:start()
                 end
                 
@@ -821,28 +747,23 @@ for i, info in ipairs(MAP_LIST) do
     end)
 end
 
--- ============================================
--- FINAL SETUP
--- ============================================
-
 task.wait(0.1)
 Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 10)
 
 print("===========================================")
 print("[King Morris] Menu loaded successfully!")
-print("[King Morris] Version: 4.1 Fixed Integration")
+print("[King Morris] Version: 5.0 Ultimate")
 print("[King Morris] Features:")
-print("  ✓ Auto AFK System dengan Smart Respawn")
+print("  ✓ Auto AFK System with Smart Respawn")
 print("  ✓ Private Server Support")
 print("  ✓ " .. #MAP_LIST .. " Maps Available")
 print("===========================================")
 
--- Cleanup saat player leaving
 player.AncestryChanged:Connect(function()
     if AutoAFKSystem.running then
         AutoAFKSystem:stop()
     end
     if ScreenGui and ScreenGui.Parent then
-        ScreenGui:Destroy()
+        pcall(function() ScreenGui:Destroy() end)
     end
 end)
