@@ -6,6 +6,14 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
 -- ═══════════════════════════════════════
+-- COLOR SCHEME
+-- ═══════════════════════════════════════
+local mainColor = Color3.fromRGB(200, 50, 100)
+local darkPink = Color3.fromRGB(150, 30, 80)
+local lightPink = Color3.fromRGB(255, 120, 170)
+local bgColor = Color3.fromRGB(40, 15, 30)
+
+-- ═══════════════════════════════════════
 -- WHITELIST CONFIGURATION
 -- ═══════════════════════════════════════
 local WHITELIST = {
@@ -46,17 +54,17 @@ local function createModernGUI()
     background.Size = UDim2.new(1, 0, 1, 0)
     background.Position = UDim2.new(0, 0, 0, 0)
     background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    background.BackgroundTransparency = 0.5
+    background.BackgroundTransparency = 0.4
     background.BorderSizePixel = 0
     background.Parent = screenGui
     
     -- Main Container
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "MainContainer"
-    mainFrame.Size = UDim2.new(0, 450, 0, 400)
+    mainFrame.Size = UDim2.new(0, 450, 0, 380)
     mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
     mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    mainFrame.BackgroundColor3 = bgColor
     mainFrame.BorderSizePixel = 0
     mainFrame.ClipsDescendants = true
     mainFrame.Parent = background
@@ -67,7 +75,7 @@ local function createModernGUI()
     
     -- Gradient Border Effect
     local borderGradient = Instance.new("UIStroke")
-    borderGradient.Color = Color3.fromRGB(88, 101, 242)
+    borderGradient.Color = mainColor
     borderGradient.Thickness = 2
     borderGradient.Transparency = 0
     borderGradient.Parent = mainFrame
@@ -77,7 +85,7 @@ local function createModernGUI()
     header.Name = "Header"
     header.Size = UDim2.new(1, 0, 0, 80)
     header.Position = UDim2.new(0, 0, 0, 0)
-    header.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+    header.BackgroundColor3 = mainColor
     header.BorderSizePixel = 0
     header.Parent = mainFrame
     
@@ -89,7 +97,7 @@ local function createModernGUI()
     local headerFix = Instance.new("Frame")
     headerFix.Size = UDim2.new(1, 0, 0, 20)
     headerFix.Position = UDim2.new(0, 0, 1, -20)
-    headerFix.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+    headerFix.BackgroundColor3 = mainColor
     headerFix.BorderSizePixel = 0
     headerFix.Parent = header
     
@@ -123,7 +131,7 @@ local function createModernGUI()
     subtitle.Position = UDim2.new(0, 75, 0, 50)
     subtitle.BackgroundTransparency = 1
     subtitle.Text = "Premium Script System"
-    subtitle.TextColor3 = Color3.fromRGB(200, 200, 255)
+    subtitle.TextColor3 = lightPink
     subtitle.TextSize = 14
     subtitle.Font = Enum.Font.Gotham
     subtitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -160,7 +168,7 @@ local function createModernGUI()
     statusIcon.Size = UDim2.new(0, 80, 0, 80)
     statusIcon.Position = UDim2.new(0.5, 0, 0, 10)
     statusIcon.AnchorPoint = Vector2.new(0.5, 0)
-    statusIcon.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    statusIcon.BackgroundColor3 = Color3.fromRGB(30, 20, 25)
     statusIcon.Text = "🔒"
     statusIcon.TextSize = 48
     statusIcon.Font = Enum.Font.GothamBold
@@ -171,7 +179,7 @@ local function createModernGUI()
     iconCorner.Parent = statusIcon
     
     local iconStroke = Instance.new("UIStroke")
-    iconStroke.Color = Color3.fromRGB(255, 59, 59)
+    iconStroke.Color = mainColor
     iconStroke.Thickness = 3
     iconStroke.Parent = statusIcon
     
@@ -182,7 +190,7 @@ local function createModernGUI()
     titleLabel.Position = UDim2.new(0, 0, 0, 100)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = "ACCESS DENIED"
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.TextColor3 = lightPink
     titleLabel.TextSize = 26
     titleLabel.Font = Enum.Font.GothamBold
     titleLabel.Parent = content
@@ -190,90 +198,86 @@ local function createModernGUI()
     -- Description
     local description = Instance.new("TextLabel")
     description.Name = "Description"
-    description.Size = UDim2.new(1, 0, 0, 60)
+    description.Size = UDim2.new(1, 0, 0, 70)
     description.Position = UDim2.new(0, 0, 0, 145)
     description.BackgroundTransparency = 1
     description.Text = "You are not whitelisted.\n\n💎 Want premium access?\nJoin our Discord to purchase!"
-    description.TextColor3 = Color3.fromRGB(180, 180, 200)
+    description.TextColor3 = Color3.fromRGB(220, 180, 200)
     description.TextSize = 15
     description.Font = Enum.Font.Gotham
     description.TextWrapped = true
     description.TextYAlignment = Enum.TextYAlignment.Top
     description.Parent = content
     
-    -- Discord Button
+    -- Discord Button (Single Button)
     local discordBtn = Instance.new("TextButton")
     discordBtn.Name = "DiscordButton"
-    discordBtn.Size = UDim2.new(1, 0, 0, 50)
-    discordBtn.Position = UDim2.new(0, 0, 1, -110)
-    discordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+    discordBtn.Size = UDim2.new(1, 0, 0, 55)
+    discordBtn.Position = UDim2.new(0, 0, 1, -60)
+    discordBtn.BackgroundColor3 = mainColor
     discordBtn.Text = ""
     discordBtn.AutoButtonColor = false
     discordBtn.Parent = content
     
     local discordCorner = Instance.new("UICorner")
-    discordCorner.CornerRadius = UDim.new(0, 10)
+    discordCorner.CornerRadius = UDim.new(0, 12)
     discordCorner.Parent = discordBtn
     
+    local discordStroke = Instance.new("UIStroke")
+    discordStroke.Color = lightPink
+    discordStroke.Thickness = 2
+    discordStroke.Transparency = 0.5
+    discordStroke.Parent = discordBtn
+    
+    -- Button Content Container
+    local btnContent = Instance.new("Frame")
+    btnContent.Size = UDim2.new(1, 0, 1, 0)
+    btnContent.BackgroundTransparency = 1
+    btnContent.Parent = discordBtn
+    
     local discordIcon = Instance.new("TextLabel")
-    discordIcon.Size = UDim2.new(0, 30, 0, 30)
+    discordIcon.Size = UDim2.new(0, 35, 0, 35)
     discordIcon.Position = UDim2.new(0, 15, 0.5, 0)
     discordIcon.AnchorPoint = Vector2.new(0, 0.5)
     discordIcon.BackgroundTransparency = 1
     discordIcon.Text = "📱"
-    discordIcon.TextSize = 24
-    discordIcon.Parent = discordBtn
+    discordIcon.TextSize = 28
+    discordIcon.Parent = btnContent
     
     local discordText = Instance.new("TextLabel")
-    discordText.Size = UDim2.new(1, -50, 1, 0)
-    discordText.Position = UDim2.new(0, 50, 0, 0)
+    discordText.Name = "MainText"
+    discordText.Size = UDim2.new(1, -120, 0, 22)
+    discordText.Position = UDim2.new(0, 55, 0, 8)
     discordText.BackgroundTransparency = 1
     discordText.Text = "JOIN DISCORD SERVER"
     discordText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    discordText.TextSize = 16
+    discordText.TextSize = 17
     discordText.Font = Enum.Font.GothamBold
     discordText.TextXAlignment = Enum.TextXAlignment.Left
-    discordText.Parent = discordBtn
+    discordText.Parent = btnContent
     
-    -- Copy Link Button
-    local copyBtn = Instance.new("TextButton")
-    copyBtn.Name = "CopyButton"
-    copyBtn.Size = UDim2.new(1, 0, 0, 45)
-    copyBtn.Position = UDim2.new(0, 0, 1, -55)
-    copyBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-    copyBtn.Text = ""
-    copyBtn.AutoButtonColor = false
-    copyBtn.Parent = content
+    local discordLink = Instance.new("TextLabel")
+    discordLink.Name = "SubText"
+    discordLink.Size = UDim2.new(1, -120, 0, 18)
+    discordLink.Position = UDim2.new(0, 55, 0, 30)
+    discordLink.BackgroundTransparency = 1
+    discordLink.Text = "discord.gg/7Zqmdm5Shq"
+    discordLink.TextColor3 = lightPink
+    discordLink.TextSize = 13
+    discordLink.Font = Enum.Font.Gotham
+    discordLink.TextXAlignment = Enum.TextXAlignment.Left
+    discordLink.Parent = btnContent
     
-    local copyCorner = Instance.new("UICorner")
-    copyCorner.CornerRadius = UDim.new(0, 10)
-    copyCorner.Parent = copyBtn
-    
-    local copyStroke = Instance.new("UIStroke")
-    copyStroke.Color = Color3.fromRGB(60, 60, 70)
-    copyStroke.Thickness = 1
-    copyStroke.Parent = copyBtn
-    
-    local copyIcon = Instance.new("TextLabel")
-    copyIcon.Size = UDim2.new(0, 25, 0, 25)
-    copyIcon.Position = UDim2.new(0, 15, 0.5, 0)
-    copyIcon.AnchorPoint = Vector2.new(0, 0.5)
-    copyIcon.BackgroundTransparency = 1
-    copyIcon.Text = "📋"
-    copyIcon.TextSize = 20
-    copyIcon.Parent = copyBtn
-    
-    local copyText = Instance.new("TextLabel")
-    copyText.Name = "CopyText"
-    copyText.Size = UDim2.new(1, -50, 1, 0)
-    copyText.Position = UDim2.new(0, 45, 0, 0)
-    copyText.BackgroundTransparency = 1
-    copyText.Text = "discord.gg/7Zqmdm5Shq"
-    copyText.TextColor3 = Color3.fromRGB(180, 180, 200)
-    copyText.TextSize = 14
-    copyText.Font = Enum.Font.Gotham
-    copyText.TextXAlignment = Enum.TextXAlignment.Left
-    copyText.Parent = copyBtn
+    local arrowIcon = Instance.new("TextLabel")
+    arrowIcon.Size = UDim2.new(0, 30, 0, 30)
+    arrowIcon.Position = UDim2.new(1, -40, 0.5, 0)
+    arrowIcon.AnchorPoint = Vector2.new(0, 0.5)
+    arrowIcon.BackgroundTransparency = 1
+    arrowIcon.Text = "→"
+    arrowIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+    arrowIcon.TextSize = 24
+    arrowIcon.Font = Enum.Font.GothamBold
+    arrowIcon.Parent = btnContent
     
     screenGui.Parent = playerGui
     
@@ -284,7 +288,7 @@ local function createModernGUI()
     -- Entrance Animation
     mainFrame.Size = UDim2.new(0, 0, 0, 0)
     local openTween = TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Size = UDim2.new(0, 450, 0, 400)
+        Size = UDim2.new(0, 450, 0, 380)
     })
     openTween:Play()
     
@@ -294,9 +298,15 @@ local function createModernGUI()
             TweenService:Create(statusIcon, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
                 Size = UDim2.new(0, 85, 0, 85)
             }):Play()
+            TweenService:Create(iconStroke, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Thickness = 4
+            }):Play()
             wait(1)
             TweenService:Create(statusIcon, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
                 Size = UDim2.new(0, 80, 0, 80)
+            }):Play()
+            TweenService:Create(iconStroke, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Thickness = 3
             }):Play()
             wait(1)
         end
@@ -318,71 +328,86 @@ local function createModernGUI()
     
     closeBtn.MouseEnter:Connect(function()
         TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+            BackgroundColor3 = Color3.fromRGB(255, 80, 80),
+            Size = UDim2.new(0, 38, 0, 38)
         }):Play()
     end)
     
     closeBtn.MouseLeave:Connect(function()
         TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(255, 59, 59)
+            BackgroundColor3 = Color3.fromRGB(255, 59, 59),
+            Size = UDim2.new(0, 35, 0, 35)
         }):Play()
     end)
     
     -- Discord Button
     discordBtn.MouseButton1Click:Connect(function()
+        -- Open Discord
         pcall(function()
             game:GetService("GuiService"):OpenBrowserWindow("https://discord.gg/7Zqmdm5Shq")
         end)
         
+        -- Copy to clipboard
         setclipboard("https://discord.gg/7Zqmdm5Shq")
         
-        discordText.Text = "✅ LINK COPIED TO CLIPBOARD!"
+        -- Success feedback
+        discordText.Text = "✅ OPENED & COPIED!"
+        discordLink.Text = "Link copied to clipboard"
+        arrowIcon.Text = "✓"
+        
         TweenService:Create(discordBtn, TweenInfo.new(0.2), {
             BackgroundColor3 = Color3.fromRGB(67, 181, 129)
         }):Play()
         
-        wait(2)
+        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
+            Color = Color3.fromRGB(100, 255, 150)
+        }):Play()
         
+        wait(2.5)
+        
+        -- Reset
         discordText.Text = "JOIN DISCORD SERVER"
+        discordLink.Text = "discord.gg/7Zqmdm5Shq"
+        arrowIcon.Text = "→"
+        
         TweenService:Create(discordBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+            BackgroundColor3 = mainColor
+        }):Play()
+        
+        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
+            Color = lightPink
         }):Play()
     end)
     
     discordBtn.MouseEnter:Connect(function()
         TweenService:Create(discordBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(98, 111, 252)
+            BackgroundColor3 = darkPink,
+            Size = UDim2.new(1, 0, 0, 58)
+        }):Play()
+        
+        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
+            Transparency = 0,
+            Thickness = 3
+        }):Play()
+        
+        TweenService:Create(arrowIcon, TweenInfo.new(0.2), {
+            Position = UDim2.new(1, -35, 0.5, 0)
         }):Play()
     end)
     
     discordBtn.MouseLeave:Connect(function()
         TweenService:Create(discordBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+            BackgroundColor3 = mainColor,
+            Size = UDim2.new(1, 0, 0, 55)
         }):Play()
-    end)
-    
-    -- Copy Button
-    copyBtn.MouseButton1Click:Connect(function()
-        setclipboard("https://discord.gg/7Zqmdm5Shq")
         
-        copyText.Text = "✅ Copied to clipboard!"
-        copyText.TextColor3 = Color3.fromRGB(67, 181, 129)
-        
-        wait(2)
-        
-        copyText.Text = "discord.gg/7Zqmdm5Shq"
-        copyText.TextColor3 = Color3.fromRGB(180, 180, 200)
-    end)
-    
-    copyBtn.MouseEnter:Connect(function()
-        TweenService:Create(copyBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+        TweenService:Create(discordStroke, TweenInfo.new(0.2), {
+            Transparency = 0.5,
+            Thickness = 2
         }):Play()
-    end)
-    
-    copyBtn.MouseLeave:Connect(function()
-        TweenService:Create(copyBtn, TweenInfo.new(0.2), {
-            BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+        
+        TweenService:Create(arrowIcon, TweenInfo.new(0.2), {
+            Position = UDim2.new(1, -40, 0.5, 0)
         }):Play()
     end)
 end
