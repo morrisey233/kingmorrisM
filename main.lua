@@ -8,7 +8,7 @@ local Players = game:GetService("Players")
 local CONFIG = {
     WHITELIST_ENABLED = true,
     ALLOWED_USERS = {
-        "morrisresto", -- Ganti dengan username Roblox Anda
+        "MORRISRESTO", -- Ganti dengan username Roblox Anda
         -- Tambahkan user lain jika perlu
     },
     HWID_CHECK = true,
@@ -159,3 +159,4 @@ Players.LocalPlayer.AncestryChanged:Connect(function()
     print("🧹 Cleaning up...")
 
 end)
+
