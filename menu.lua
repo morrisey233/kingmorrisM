@@ -47,10 +47,10 @@ Title.TextColor3 = Color3.fromRGB(219, 39, 119)
 Title.Text = "💖 MORRIS SCRIPT"
 Title.TextXAlignment = Enum.TextXAlignment.Center
 
--- 🗺️ UNIVERSAL SCRIPT URL
-local UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/WataXMenu/WataXFull/refs/heads/main/universal.lua"
+-- ✅ URL UNIVERSAL SCRIPT - FIXED
+local UNIVERSAL_SCRIPT = "https://raw.githubusercontent.com/morrisey233/kingmorrisM/main/universal.lua"
 
--- ✅ Mapping mapKey dengan text yang lebih rapi
+-- 🗺️ Mapping mapKey dengan text yang lebih rapi
 local autoWalkList = {
     {text="Mount Atin", mapKey="m1"},
     {text="Mount Yahayuk", mapKey="m2"},
